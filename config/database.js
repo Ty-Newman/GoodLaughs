@@ -1,6 +1,9 @@
 const {
-  db: { username, password, database, host },
-} = require('./index');
+  username,
+  password,
+  database,
+  host,
+} = require('./index').db;
 
 module.exports = {
   development: {
@@ -9,6 +12,5 @@ module.exports = {
     database,
     host,
     dialect: 'postgres',
-    seederStorage: 'sequelize',
   },
 };
