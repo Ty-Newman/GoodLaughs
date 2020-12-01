@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const LaughBoxLaugh = sequelize.define('LaughBoxLaugh', {
     laughId: DataTypes.INTEGER,
-    laughboxId: DataTypes.INTEGER
+    laughBoxId: DataTypes.INTEGER
   }, {});
   LaughBoxLaugh.associate = function(models) {
     LaughBoxLaugh.belongsTo(models.Laugh, {foreignKey: "laughId"})

@@ -2,7 +2,7 @@
 
 const manyToManyMapping = {
   through: 'LaughBoxLaugh',
-  otherKey: 'laughboxId',
+  otherKey: 'laughBoxId',
   foreignKey: 'laughId'
 };
 

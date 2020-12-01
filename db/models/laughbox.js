@@ -3,17 +3,17 @@
 const manyToManyMapping = {
 	through: "LaughBoxLaugh",
 	otherKey: "laughId",
-  foreignKey: "laughboxId",
+  foreignKey: "laughBoxId",
 };
 
 module.exports = (sequelize, DataTypes) => {
-  const Laughbox = sequelize.define('Laughbox', {
+  const Laughbox = sequelize.define('LaughBox', {
     name: DataTypes.STRING,
     userId: DataTypes.INTEGER
   }, {});
-  Laughbox.associate = function(models) {
-    Laughbox.belongsTo(models.User, { foreignKey: 'userId' });
-    Laughbox.belongsToMany(models.Laugh, manyToManyMapping);
+  LaughBox.associate = function(models) {
+    LaughBox.belongsTo(models.User, { foreignKey: 'userId' });
+    LaughBox.belongsToMany(models.Laugh, manyToManyMapping);
   };
-  return Laughbox;
+  return LaughBox;
 };
