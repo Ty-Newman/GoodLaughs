@@ -1,14 +1,22 @@
 extends layout
 
 block content
+    h2 Sign Up
+    br
     form(action='/users/signup' method='POST')
         input(type='hidden' name='_csrf' value=csrfToken)
         label(for='username' value='Username')
         input(type='text' name='username' id='username' placeholder='Username')
+        br
         label(for='email' value='Email')
         input(type='email' name='email' id='email' placeholder='Email')
+        br
         label(for='password' value='Password')
         input(type='password' name='password' id='password' placeholder='Password')
+        br
         label(for='confirmPass' value='Confirm Password')
         input(type='password' name='confirmPass' id='confirmPass' placeholder='Confirm Password')
-        button(type='submit' name='submit' id='submit' value='Sign-up')
+        br
+        button(type='submit' name='submit' id='submit' value='Sign-up') Submit
+    br
+    a(href="/") Return
