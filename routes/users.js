@@ -93,7 +93,7 @@ const validateSignup = [
   check("confirmPass")
     .exists({ checkFalsy: true })
     .withMessage("Please provide a different confirmed password."),
-  body("password")
+  check("password")
     .custom((value, { req }) => {
       if (value !== req.body.confirmPass) {
         throw new Error("Password and Confirm Password values do not match.");
