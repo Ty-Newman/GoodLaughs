@@ -1,18 +1,26 @@
-extends layout
-
-block content
-    h2 Log In
-    br
-    if errors.length
-        each error in errors
-            div= error
-    br
-    form(action='/users/login' method='post')
-        input(type='hidden' name='_csrf' value=csrfToken)
-        input(type='text' name='username' placeholder='username' value=username)
+doctype html
+html
+  head
+      block head
+        title=title
+        link(rel='stylesheet' href='/stylesheets/login.css')
+  body
+    block content
+        h2 Log In
         br
-        input(type='password' name='password' placeholder='password')
+        if errors.length
+            each error in errors
+                div= error
         br
-        button(type='submit' name='submit' id='submit' value='Log-In') Log In
-    br
-    a(href="/") Return
+        form(action='/users/login' method='post')
+            ul( class='flex-outer' )
+                input(type='hidden' name='_csrf' value=csrfToken)
+                li
+                    label(for=username) Username
+                    input(type='text' name='username' placeholder='username' value=username)
+                li
+                    label(for='password') Password
+                    input(type='password' name='password' placeholder='password')
+                li
+                    a(href="/") Return
+                    button(type='submit' name='submit' id='submit' value='Log-In') Log In
