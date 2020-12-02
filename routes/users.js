@@ -77,7 +77,28 @@ router.get('/signup', csrfProtection, (req, res) => {
   });
 });
 
-router.post('/signup', csrfProtection, validateLogin, handleValidationErrors, asyncHandler(async (req, res, next) => {
+const validateSignup = [
+  check("username")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide your login username."),
+  check("username")
+    .isLength({ max: 30 })
+    .withMessage("Your username cannot be longer than 30 characters."),
+  check("email")
+    .isLength({ max: 100 })
+    .withMessage("Your email address cannot be longer than 100 characters."),
+  check("password")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide a different password."),
+  check("confirmPass")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide a different confirmed password."),
+  check("password")
+    .matches("confirmPass")
+    .withMessage("Password and Confirm Password values do not match.")
+];
+
+router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, asyncHandler(async (req, res, next) => {
   console.log(req.body, "test")
   const {
     username,
