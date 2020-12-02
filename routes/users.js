@@ -5,6 +5,8 @@ const bcrypt = require('bcryptjs');
 const { csrfProtection, asyncHandler, handleValidationErrors } = require('../utils');
 const { loginUser } = require('../auth');
 const { check, validationResult } = require('express-validator');
+const { Sequelize } = require('../db/models');
+const Op = Sequelize.Op;
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -46,10 +48,6 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
     if (user !== null) {
       const passwordMatch = await bcrypt.compare(password, user.hashedPassword.toString());
       if (passwordMatch) {
-        // loginUser(req, res, user);
-        // req.session.auth = {username : user.id}
-        // console.log('test')
-        // return res.redirect('/');
         req.session.user = {
           username: user.username,
           id: user.id,
@@ -74,7 +72,8 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
 router.get('/signup', csrfProtection, (req, res) => {
   res.render('signup', {
     title: 'User Sign Up',
-    csrfToken: req.csrfToken()
+    csrfToken: req.csrfToken(),
+    errors: '',
   });
 });
 
@@ -86,19 +85,47 @@ router.post('/signup', csrfProtection, validateLogin, handleValidationErrors, as
     password
   } = req.body;
 
-  const user = db.User.build({
-    username,
-    email,
-  })
+  let errors = [];
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  user.hashedPassword = hashedPassword;
-  await user.save();
-  req.session.user = user;
-  req.session.save(() => {
-    res.redirect('/');
-  })
+  const validatorErrors = validationResult(req);
+  if (validatorErrors.isEmpty()) {
+    const user = db.User.build({
+      username,
+      email,
+    });
 
+    // check if user already in database
+    const existingUser = await db.User.findOne({ where: { [Op.or]: [
+      { username },
+      { email }
+    ]}});
+
+    if (!existingUser) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user.hashedPassword = hashedPassword;
+      await user.save();
+
+      // log the user in
+      req.session.user = {
+        username: user.username,
+        id: user.id,
+      };
+      req.session.save(() => {
+        res.redirect('/');
+      })
+    }
+    errors.push('Signup failed for the provided username and email')
+    console.log(errors)
+  } else {
+    errors = validatorErrors.array().map((error) => error.msg)
+  }
+
+  console.log(errors);
+  res.render('signup', {
+    title: 'Signup',
+    csrfToken: req.csrfToken(),
+    errors,
+  });
 }));
 
 module.exports = router;
