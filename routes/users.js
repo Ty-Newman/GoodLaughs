@@ -4,7 +4,7 @@ const db = require('../db/models');
 const bcrypt = require('bcryptjs');
 const { csrfProtection, asyncHandler, handleValidationErrors } = require('../utils');
 const { loginUser } = require('../auth');
-const { check, validationResult } = require('express-validator');
+const { check, body, validationResult } = require('express-validator');
 const { Sequelize } = require('../db/models');
 const Op = Sequelize.Op;
 
@@ -93,9 +93,13 @@ const validateSignup = [
   check("confirmPass")
     .exists({ checkFalsy: true })
     .withMessage("Please provide a different confirmed password."),
-  check("password")
-    .matches("confirmPass")
-    .withMessage("Password and Confirm Password values do not match.")
+  body("password")
+    .custom((value, { req }) => {
+      if (value !== req.body.confirmPass) {
+        throw new Error("Password and Confirm Password values do not match.");
+      } else {
+        return value;
+      }})
 ];
 
 router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, asyncHandler(async (req, res, next) => {
