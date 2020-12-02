@@ -11,6 +11,12 @@ h2{
     justify-content: center;
 }
 
+div{
+    display: flex;
+    justify-content: center;
+    color: red;
+}
+
 input{
     border: none;
     background-color:  #b9b38a;
