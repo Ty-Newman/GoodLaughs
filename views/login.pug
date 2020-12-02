@@ -1,8 +1,14 @@
 extends layout
 
 block content
-    form(action='/login' method='post')
+    h2 Log In
+    br
+    form(action='/users/login' method='post')
         input(type='hidden' name='_csrf' value=csrfToken)
         input(type='text' name='username' placeholder='username' value=username)
+        br
         input(type='password' name='password' placeholder='password')
-        input(type='submit' value="Log-In")
+        br
+        button(type='submit' name='submit' id='submit' value='Log-In') Log In
+    br
+    a(href="/") Return
