@@ -14,7 +14,7 @@ module.exports = {
       bows: false,
       lols: 4,
       userId: 1,
-      laughId: 1,
+      laughId: 2,
       createdAt: new Date(),
       updatedAt: new Date()
     }]);
