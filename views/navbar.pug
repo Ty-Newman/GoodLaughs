@@ -2,27 +2,23 @@ div
 #header
     div
     #logo
-        img(src="../public/images/logo.png" alt="GoodLaughs Logo")
+        img(src="../public/imageslogo.png" alt="GoodLaughs Logo" style='width:140px; height:50px;')
     div
-    #searchbar
-        input(type='text' name='search' placeholder='Search Laughs' value=search)
+    #nav-buttons
+        div
+        #home
+            a(href="/") Home
+        div
+        #myLaughs
+            a(href="/laughboxes") LaughBox
     div
-    .buttons
+    #searchBar
+        input(type='text' name='search' placeholder='Search Laughs')
+    div
+    #buttons
         div
         #login
             a(href="/users/login") login
         div
         #signup
             a(href="/users/signup") signup
-
-nav
-    div
-    #nav-buttons
-        div
-        .nav-buttons__click
-            div
-            #home
-                a(href="/") Home
-            div
-            #myLaughs
-                a(href="/laughboxes") MyLaughs
