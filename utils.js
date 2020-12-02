@@ -17,6 +17,12 @@ const handleValidationErrors = (req, res, next) => {
     err.status = 400;
     err.title = "Bad request.";
 
+    res.render(req.path.substring(1), {
+      title: err.title,
+      csrfToken: req.csrfToken(),
+      errors: err.errors,
+    });
+
     return next(err);
   }
   next();
