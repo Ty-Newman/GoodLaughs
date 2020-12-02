@@ -7,7 +7,7 @@ const manyToManyMapping = {
 };
 
 module.exports = (sequelize, DataTypes) => {
-  const Laughbox = sequelize.define('LaughBox', {
+  const LaughBox = sequelize.define('LaughBox', {
     name: DataTypes.STRING,
     userId: DataTypes.INTEGER
   }, {});

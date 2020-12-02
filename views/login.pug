@@ -1,0 +1,8 @@
+extends layout
+
+block content
+    form(action='/login' method='post')
+        input(type='hidden' name='_csrf' value=csrfToken)
+        input(type='text' name='username' placeholder='username' value=username)
+        input(type='password' name='password' placeholder='password')
+        input(type='submit' value="Log-In")

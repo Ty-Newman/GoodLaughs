@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    form(action='/users/signup' method='POST')
+        input(type='hidden' name='_csrf' value=csrfToken)
+        label(for='username' value='Username')
+        input(type='text' name='username' id='username' placeholder='Username')
+        label(for='email' value='Email')
+        input(type='email' name='email' id='email' placeholder='Email')
+        label(for='password' value='Password')
+        input(type='password' name='password' id='password' placeholder='Password')
+        label(for='confirmPass' value='Confirm Password')
+        input(type='password' name='confirmPass' id='confirmPass' placeholder='Confirm Password')
+        button(type='submit' name='submit' id='submit' value='Sign-up')
