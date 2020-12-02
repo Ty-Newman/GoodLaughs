@@ -53,6 +53,10 @@ input{
     border-radius: 2px;
   }
 
+  .flex-outer li button:hover{
+      cursor: pointer;
+  }
+
 .flex-outer li a{
     padding: 6px 8px;
     border: none;
