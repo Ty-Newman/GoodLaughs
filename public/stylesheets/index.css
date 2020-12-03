@@ -8,12 +8,13 @@ h1 {
     grid-template-rows: 1;
     font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif;
     background-color: #F4F1EA;
-    height: 50px;
+    height: 100px;
     box-shadow: 0px 1px 2px rgba(0,0,0,0.15);
 }
 
-#logo {
-    background: url(./images/logo.png) no-repeat;
+img{
+    width: 190px;
+    height: 100px;
     grid-column: 1/4;
     grid-row: 1;
 }
@@ -34,15 +35,14 @@ h1 {
 
 #searchBar {
     display: grid;
-    padding-top: 9px;
-    justify-content: center;
-    align-items: center;
+    height: 40px;
     grid-column: 3/4;
     grid-row: 1;
+    justify-content: center;
+    align-items: center;
 }
 
 #nav-buttons {
-    color: #382110;
     grid-column: 2/4;
     grid-row: 1;
     font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif;
@@ -50,22 +50,40 @@ h1 {
     align-items: center;
 }
 
-#home {
-    padding-left: 30px;
-    padding-right: 30px;
+#nav-buttons a {
+    color: #382110;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    letter-spacing: .09em;
+    border-radius: 2px;
+    text-decoration: none;
 }
 
-#myLaughs {
-    padding-left: 30px;
-    padding-right: 30px;
+#nav-buttons a:hover {
+    color: #ffffff;
+    background-color: #382110;
+    text-decoration: none;
 }
 
-#login {
-    padding-left: 30px;
-    padding-right: 30px;
+#buttons a {
+    color: #382110;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    letter-spacing: .09em;
+    border-radius: 2px;
+    text-decoration: none;
 }
 
-#signup {
-    padding-left: 30px;
-    padding-right: 30px;
+#buttons a:hover {
+    color: #ffffff;
+    background-color: #382110;
+    text-decoration: none;
 }
