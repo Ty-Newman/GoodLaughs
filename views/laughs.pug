@@ -13,7 +13,16 @@ block content
       input(type='hidden' name='_csrf' value=csrfToken)
       li
         label Share something funny...
-        textarea(name='body' placeholder="What's so funny?")
+        textarea(name='laughBody' placeholder="What's so funny?")
+      li
+        label Bow (for those hahahahaahas!)
+        input(type='radio' name='bows')
+      li
+        label Lols 1-5
+        input(type='number' name='lols' placeholder="5")
+      li
+        label Write a review...
+        textarea(name='reviewBody' placeholder="What are you thinking!?")
       li
         button(type='submit' name='submit' id='submit' value='Laughs') Submit
 

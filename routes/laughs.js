@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express();
 const db = require('../db/models');
+const { Sequelize } = require('../db/models');
 const { csrfProtection, asyncHandler, handleValidationErrors } = require('../utils');
 const { check, body, validationResult } = require('express-validator');
+const Op = Sequelize.Op;
 
 const validateLaugh = [
   // TODO: Build validation for a laguh post
@@ -15,25 +17,53 @@ const laughNotFoundError = (id) => {
   return err;
 }
 
-router.get('/', csrfProtection, (req, res) => {
-  const laugh = db.Laugh.build();
+router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
+  const laugh = await db.Laugh.build();
   res.render('laughs', {
     title: 'Add a Laugh',
     body: '',
     errors: '',
     csrfToken: req.csrfToken(),
   });
-});
+}));
 
 router.post('/', csrfProtection, asyncHandler(async (req, res) => {
-  const { body } = req.body;
+  const { laughBody, bows, lols, reviewBody } = req.body;
   const userId = req.session.user.id;
-  const laugh = db.Laugh.build({ body, userId });
+  const userIdInt = parseInt(userId);
+  const bowsBoolean = (bows === 'on') ? true : false;
+  const lolsInt = parseInt(lols);
 
+  const laugh = await db.Laugh.build({ body: laughBody, userId });
+  
   const validateErrors = validationResult(req);
 
   if (validateErrors.isEmpty()) {
     await laugh.save();
+    const savedLaugh = await db.Laugh.findOne({
+      where: {
+        [Op.and] : [
+          { userId: userIdInt },
+          { body: laughBody }
+        ]
+      }
+    });
+
+    const laughIdInt = parseInt(savedLaugh.id);
+
+    await db.Rating.create({
+      bows: bowsBoolean,
+      lols: lolsInt,
+      userId: userIdInt,
+      laughId: laughIdInt
+    });
+
+    await db.Review.create({
+      body: reviewBody,
+      userId: userIdInt,
+      laughId: laughIdInt
+    });
+
     res.redirect('/');
   } else {
       const errors = validateErrors.array().map((error) => {
