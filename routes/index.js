@@ -13,15 +13,38 @@ router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => 
   // have this option on each laugh page - do in other pug file or navbar
 
   // look to what user is logged in
-  console.log(req.session)
   const userId = req.session.user.id
   // get all their laughs
-  const laughs = db.Laugh.findAll({
+  const laughs = await db.Laugh.findAll({
     where: {
       userId
     },
-    include: [Reviews, Ratings]
+    include: db.User
   });
+
+  // console.log(laughs.keys())
+
+  // for (const key in laughs[0]) {
+  //   console.log(laughs[0][key])
+  // }
+
+  // console.log(laughs[0].map((laugh) => console.log(laugh)));
+
+  // const laughReviews = laughs.map(laugh => {
+  //   db.Review.findAll({
+  //     where: {
+  //       laughId: laugh.id
+  //     }
+  //   })
+  // });
+
+  // const laughRatings = laughs.map(laugh => {
+  //   db.Rating.findAll({
+  //     where: {
+  //       laughId: laugh.id
+  //     }
+  //   })
+  // });
 
   // display most recent 10 laughs
   res.render('laughfeed', {
