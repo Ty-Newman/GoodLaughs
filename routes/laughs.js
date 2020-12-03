@@ -2,7 +2,7 @@ const express = require('express');
 const router = express();
 const db = require('../db/models');
 const { csrfProtection, asyncHandler, handleValidationErrors } = require('../utils');
-const { check, validationResult } = require('express-validator');
+const { check, body, validationResult } = require('express-validator');
 
 const validateLaugh = [
   // TODO: Build validation for a laguh post
@@ -15,22 +15,36 @@ const laughNotFoundError = (id) => {
   return err;
 }
 
-router.get('/', csrfProtection, (req, res, next) => {
+router.get('/', csrfProtection, (req, res) => {
+  const laugh = db.Laugh.build();
   res.render('laughs', {
-    title: 'Laughs',
+    title: 'Add a Laugh',
+    body: '',
+    errors: '',
     csrfToken: req.csrfToken(),
-  })
+  });
 });
 
-router.post('/', csrfProtection, handleValidationErrors, asyncHandler(async (req, res, next) => {
+router.post('/', csrfProtection, asyncHandler(async (req, res) => {
   const { body } = req.body
   const laugh = db.Laugh.build({ body })
-  req.session.save(() => {
-    res.redirect('/laughs')
-  })
-  res.render('laughs', {
-    title: "Post a new laugh"
-  })
+  const validateErrors = validationResult(req);
+
+  if (validateErrors.isEmpty()) {
+    await laugh.save(() => {
+      res.redirect('/')});
+  } else {
+    const errors = validateErrors.array().map((error) => {
+      return error.msg
+    })
+    console.log(errors)
+    res.render('laughs', {
+      title: 'Add a Laugh',
+      body,
+      errors,
+      csrfToken: req.csrfToken(),
+    });
+  };
 }))
 
 // Retrieve a specific laugh
