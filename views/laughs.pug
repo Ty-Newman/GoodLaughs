@@ -1,4 +1,7 @@
 extends layout
+append head
+  link(rel="stylesheet", href="/stylesheets/login.css")
+  link(rel="stylesheet", href="/stylesheets/laughs.css")
 
 block content
   a(href="/") Return to Main Page
@@ -6,12 +9,13 @@ block content
   h2 Laughs
   br
   form(action='/laughs' method='POST')
-    input(type='hidden' name='_csrf' value=csrfToken)
-    label Share something funny...
-    br
-    textarea(name='body' placeholder="What's so funny?")
-    br
-    button(type='submit' name='submit' id='submit' value='Laughs') Submit
+    ul(class='flex-outer')
+      input(type='hidden' name='_csrf' value=csrfToken)
+      li
+        label Share something funny...
+        textarea(name='body' placeholder="What's so funny?")
+      li
+        button(type='submit' name='submit' id='submit' value='Laughs') Submit
 
   table
     thead: tr
