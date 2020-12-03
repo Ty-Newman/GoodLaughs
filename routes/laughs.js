@@ -33,11 +33,10 @@ router.post('/', csrfProtection, asyncHandler(async (req, res) => {
   const validateErrors = validationResult(req);
 
   if (validateErrors.isEmpty()) {
-    await laugh.save(() => {
-      res.redirect('/')});
+    await laugh.save();
+    res.redirect('/');
   } else {
-    const errors = validateErrors.array().map((error) => {
-      console.log(errors)
+      const errors = validateErrors.array().map((error) => {
       res.render('laughs', {
         title: 'Add a Laugh',
         body,

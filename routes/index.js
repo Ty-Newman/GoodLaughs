@@ -22,29 +22,22 @@ router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => 
     include: db.User
   });
 
-  // console.log(laughs.keys())
+  for (let i = 0; i < laughs.length; i ++) {
+    const laugh = laughs[i];
+    const ratings = db.Rating.findAll({
+      where: {
+        laughId: laugh.id
+      }
+    })
+    laugh.ratings = ratings;
 
-  // for (const key in laughs[0]) {
-  //   console.log(laughs[0][key])
-  // }
-
-  // console.log(laughs[0].map((laugh) => console.log(laugh)));
-
-  // const laughReviews = laughs.map(laugh => {
-  //   db.Review.findAll({
-  //     where: {
-  //       laughId: laugh.id
-  //     }
-  //   })
-  // });
-
-  // const laughRatings = laughs.map(laugh => {
-  //   db.Rating.findAll({
-  //     where: {
-  //       laughId: laugh.id
-  //     }
-  //   })
-  // });
+    const reviews = db.Review.findAll({
+      where: {
+        laughId: laugh.id
+      }
+    })
+    laugh.reviews = reviews;
+  }
 
   // display most recent 10 laughs
   res.render('laughfeed', {
