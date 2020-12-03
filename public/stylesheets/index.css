@@ -4,8 +4,8 @@ h1 {
 
 #header {
     display: grid;
-    grid-template-columns: 4, 1fr;
-    grid-template-rows: 1;
+    grid-template-columns: auto auto auto auto;
+    grid-auto-flow: row;
     font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif;
     background-color: #F4F1EA;
     height: 100px;
@@ -34,12 +34,21 @@ img{
 }
 
 #searchBar {
-    display: grid;
-    height: 40px;
+    display: flex;
     grid-column: 3/4;
     grid-row: 1;
     justify-content: center;
     align-items: center;
+    position: relative;
+}
+
+#searchBar input {
+    height: 40px;
+    width: auto;
+    display: flex;
+    align-items: center;
+    position: relative;
+    left: 30px;
 }
 
 #nav-buttons {
