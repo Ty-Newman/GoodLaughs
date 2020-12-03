@@ -44,14 +44,14 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
   const validatorErrors = validationResult(req);
   if (validatorErrors.isEmpty()) {
     const user = await db.User.findOne({ where: { username } });
-    console.log(user)
-    if (user !== null) {
+    if (user !== null || user === undefined) {
       const passwordMatch = await bcrypt.compare(password, user.hashedPassword.toString());
       if (passwordMatch) {
         req.session.user = {
           username: user.username,
           id: user.id,
         };
+        console.log(req.session)
         req.session.save(() => {
           res.redirect('/');
         })
@@ -60,13 +60,12 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
     errors.push('Login failed for the provided username and password')
   } else {
     errors = validatorErrors.array().map((error) => error.msg)
+    res.render('login', {
+      title: 'Login',
+      csrfToken: req.csrfToken(),
+      errors,
+    });
   }
-
-  res.render('login', {
-    title: 'Login',
-    csrfToken: req.csrfToken(),
-    errors,
-  });
 }));
 
 router.get('/signup', csrfProtection, (req, res) => {
