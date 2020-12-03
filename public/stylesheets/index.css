@@ -64,7 +64,7 @@ img{
     display: flex;
     grid-column: 3/4;
     grid-row: 1;
-    justify-content: right;
+    justify-content: flex-end;
     align-items: center;
 }
 
