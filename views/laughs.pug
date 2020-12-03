@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  a(href="/") Return to Main Page
+  br
+  h2 Laughs
+  br
+  form(action='/laughs' method='POST')
+    input(type='hidden' name='_csrf' value=csrfToken)
+    label Share something funny...
+    br
+    textarea(name='body' placeholder="What's so funny?")
+    br
+    button(type='submit' name='submit' id='submit' value='Laughs') Submit
+
+  table
+    thead: tr
+      th Username
+      th Laugh
+      th Posted
+      th Updated
+      th Bows
+      th LOLs
+      th Review
+    //- tbody
+    //-   each laugh in laughs
+    //-     tr
+    //-       td= laugh.User.username
+    //-       td= body
+    //-       td= createdAt
+    //-       td= updatedAt
+    //-       td= laugh.Rating.bows
+    //-       td= laugh.Rating.lols
+    //-       td= laugh.Review.body
