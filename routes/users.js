@@ -44,7 +44,6 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
   const validatorErrors = validationResult(req);
   if (validatorErrors.isEmpty()) {
     const user = await db.User.findOne({ where: { username } });
-    console.log(user)
     if (user !== null) {
       const passwordMatch = await bcrypt.compare(password, user.hashedPassword.toString());
       if (passwordMatch) {
@@ -103,7 +102,6 @@ const validateSignup = [
 ];
 
 router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, asyncHandler(async (req, res, next) => {
-  console.log(req.body, "test")
   const {
     username,
     email,

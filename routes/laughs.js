@@ -5,7 +5,17 @@ const { csrfProtection, asyncHandler, handleValidationErrors } = require('../uti
 const { check, validationResult } = require('express-validator');
 
 const validateLaugh = [
-  // TODO: Build validation for a laguh post
+  check("body")
+    .exists({ checkFalsy: true })
+    .withMessage("Please enter your laugh")
+    .custom((value) => {
+      return db.Laugh.findOne({ where: { body: value } })
+      .then((laugh) => {
+        if (laugh) {
+          return Promise.reject('The same laugh has already been shared by another user!')
+        }
+      })
+    })
 ]
 
 const laughNotFoundError = (id) => {
