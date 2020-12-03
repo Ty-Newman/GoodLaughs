@@ -22,16 +22,17 @@ router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => 
     include: db.User
   });
 
+  // may break when we add reviews and ratings
   for (let i = 0; i < laughs.length; i ++) {
     const laugh = laughs[i];
-    const ratings = db.Rating.findAll({
+    const ratings = await db.Rating.findAll({
       where: {
         laughId: laugh.id
       }
     })
     laugh.ratings = ratings;
 
-    const reviews = db.Review.findAll({
+    const reviews = await db.Review.findAll({
       where: {
         laughId: laugh.id
       }
