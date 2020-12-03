@@ -1,0 +1,8 @@
+*{
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+form{
+    display: flex;
+    justify-content: center;
+}

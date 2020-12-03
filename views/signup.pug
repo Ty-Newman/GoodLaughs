@@ -1,31 +1,29 @@
-html
-  head
-      block head
-        title=title
-        link(rel='stylesheet' href='/stylesheets/login.css')
-  body
-    block content
-      h2 Sign Up
-      br
-      if errors.length
-          each error in errors
-              div= error
-      br
-      form(action='/users/signup' method='POST')
-          ul(class='flex-outer')
-              input(type='hidden' name='_csrf' value=csrfToken)
-              li
-                  label(for='username') Username
-                  input(type='text' name='username' id='username' placeholder='Username')
-              li
-                  label(for='email') Email
-                  input(type='email' name='email' id='email' placeholder='Email')
-              li
-                  label(for='password') Password
-                  input(type='password' name='password' id='password' placeholder='Password')
-              li
-                  label(for='confirmPass') Confirm Password
-                  input(type='password' name='confirmPass' id='confirmPass' placeholder='Confirm Password')
-              li
-                  a(href="/") Return
-                  button(type='submit' name='submit' id='submit' value='Sign-up') Submit
+extends layout
+append head
+    link(rel='stylesheet' href='/stylesheets/login.css')
+
+block content
+    h2 Sign Up
+    br
+    if errors.length
+        each error in errors
+            div(id='errors')= error
+    br
+    form(action='/users/signup' method='POST')
+        ul(class='flex-outer')
+            input(type='hidden' name='_csrf' value=csrfToken)
+            li
+                label(for='username') Username
+                input(type='text' name='username' id='username' placeholder='Username')
+            li
+                label(for='email') Email
+                input(type='email' name='email' id='email' placeholder='Email')
+            li
+                label(for='password') Password
+                input(type='password' name='password' id='password' placeholder='Password')
+            li
+                label(for='confirmPass') Confrim Password
+                input(type='password' name='confirmPass' id='confirmPass' placeholder='Confirm Password')
+            li
+                a(href="/") Return
+                button(type='submit' name='submit' id='submit' value='Sign-up') Submit

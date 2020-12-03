@@ -1,9 +1,7 @@
-*{
-    background-color: #E5E3D6;
-}
 
 body, h2{
     font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #E5E3D6;
 }
 
 h2{
@@ -11,13 +9,13 @@ h2{
     justify-content: center;
 }
 
-div{
+#errors{
     display: flex;
     justify-content: center;
     color: red;
 }
 
-input{
+.flex-outer input{
     border: none;
     background-color:  #b9b38a;
     padding: 5px 5px 5px 5px;
@@ -59,9 +57,9 @@ input{
     border-radius: 2px;
   }
 
-  .flex-outer li button:hover{
-      cursor: pointer;
-  }
+.flex-outer li button:hover{
+    cursor: pointer;
+}
 
 .flex-outer li a{
     padding: 6px 8px;
