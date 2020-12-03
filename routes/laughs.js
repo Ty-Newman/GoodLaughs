@@ -26,15 +26,17 @@ const laughNotFoundError = (id) => {
 }
 
 router.get('/', csrfProtection, (req, res, next) => {
+  const laughs = await db.Laugh.findAll();
   res.render('laughs', {
     title: 'Laughs',
     csrfToken: req.csrfToken(),
+    laughs,
   })
 });
 
 router.post('/', csrfProtection, handleValidationErrors, asyncHandler(async (req, res, next) => {
   const { body } = req.body
-  const laugh = db.Laugh.build({ body })
+  const laugh = await db.Laugh.create({ body })
   req.session.save(() => {
     res.redirect('/laughs')
   })
@@ -56,7 +58,8 @@ router.put('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(asy
   const laugh = await db.Laugh.findByPk(laughId);
 
   if (laugh) {
-    await laugh.update({ body: req.body.body })
+    await laugh.update({ body: req.body.body });
+    res.redirect('/laughs');
   } else {
     next(laughNotFoundError(taskId));
   }
@@ -70,6 +73,7 @@ router.delete('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(
   if (laugh) {
     await laugh.destroy();
     res.status(204).end();
+    res.redirect('/laughs');
   } else {
     next(laughNotFoundError(taskId));
   }
