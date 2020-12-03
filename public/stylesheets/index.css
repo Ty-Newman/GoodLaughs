@@ -97,3 +97,23 @@ img{
     background-color: #382110;
     text-decoration: none;
 }
+
+#main {
+    display: grid;
+    grid-template-columns: 200px auto;
+
+}
+
+#sideBar {
+    background-color: #F4F1EA;
+    grid-column: 1/2;
+    width: 200px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    margin-top: 10px;
+}
+
+#feedPage {
+    grid-column: 2/2;
+    margin-left: 50px;
+}
