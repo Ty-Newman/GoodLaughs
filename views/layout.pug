@@ -1,9 +1,10 @@
 doctype html
 html
   head
+  include navbar
       block head
         title=title
-        link(rel='stylesheet' href='/stylesheets/reset.css')
+        link(rel='stylesheet' href='/stylesheets/index.css')
   body
     block content
     //- render username (logged in user)
