@@ -153,4 +153,36 @@ router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, a
   });
 }));
 
+router.get('/laughs', csrfProtection, (req, res) => {
+  const laugh = db.Laugh.build();
+  res.render('laugh-add', {
+    title: 'Add a Laugh',
+    body,
+    errors,
+    csrfToken: req.csrfToken(),
+  });
+})
+
+router.post('/laughs', csrfProtection, asyncHandler(async (req, res) => {
+  const { body } = req.body;
+
+  const laugh = db.Laugh.build({ body });
+
+  const validateErrors = validationResult(req);
+
+  if (validateErrors.isEmpty()) {
+    await laugh.save();
+    res.redirect('/');
+  } else {
+    const errors = validateErrors.array().map((error) => {
+      res.render('laugh-add', {
+        title: 'Add a Laugh',
+        body,
+        errors,
+        csrfToken: req.csrfToken(),
+      });
+    })
+  };
+}))
+
 module.exports = router;
