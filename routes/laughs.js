@@ -28,7 +28,8 @@ router.get('/', csrfProtection, (req, res) => {
 router.post('/', csrfProtection, asyncHandler(async (req, res) => {
   const { body } = req.body;
   const userId = req.session.user.id;
-  const laugh = db.Laugh.build({ body, userId })
+  const laugh = db.Laugh.build({ body, userId });
+
   const validateErrors = validationResult(req);
 
   if (validateErrors.isEmpty()) {
