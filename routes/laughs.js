@@ -26,8 +26,9 @@ router.get('/', csrfProtection, (req, res) => {
 });
 
 router.post('/', csrfProtection, asyncHandler(async (req, res) => {
-  const { body } = req.body
-  const laugh = db.Laugh.build({ body })
+  const { body } = req.body;
+  const userId = req.session.user.id;
+  const laugh = db.Laugh.build({ body, userId })
   const validateErrors = validationResult(req);
 
   if (validateErrors.isEmpty()) {
@@ -35,15 +36,15 @@ router.post('/', csrfProtection, asyncHandler(async (req, res) => {
       res.redirect('/')});
   } else {
     const errors = validateErrors.array().map((error) => {
+      console.log(errors)
+      res.render('laughs', {
+        title: 'Add a Laugh',
+        body,
+        errors,
+        csrfToken: req.csrfToken(),
+      });
       return error.msg
     })
-    console.log(errors)
-    res.render('laughs', {
-      title: 'Add a Laugh',
-      body,
-      errors,
-      csrfToken: req.csrfToken(),
-    });
   };
 }))
 

@@ -19,8 +19,16 @@ router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => 
     where: {
       userId
     },
-    include: User
+    include: db.User
   });
+
+  // console.log(laughs.keys())
+
+  // for (const key in laughs[0]) {
+  //   console.log(laughs[0][key])
+  // }
+
+  // console.log(laughs[0].map((laugh) => console.log(laugh)));
 
   // const laughReviews = laughs.map(laugh => {
   //   db.Review.findAll({
@@ -37,8 +45,6 @@ router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => 
   //     }
   //   })
   // });
-
-  console.log(laughs)
 
   // display most recent 10 laughs
   res.render('laughfeed', {
