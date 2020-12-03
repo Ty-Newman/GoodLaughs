@@ -5,8 +5,19 @@ const db = require('../db/models');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'GoodLaughs' });
+  let username = [];
+
+  if (req.session.user) {
+    username.push(req.session.user.username);
+  }
+
+  res.render('index', {
+    title: 'GoodLaughs',
+    username,
+  });
 });
+
+
 
 router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => {
   // when you login, send you here - do in other files
@@ -52,7 +63,7 @@ router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => 
     csrfToken: req.csrfToken(),
     laughs
   });
-  
+
   // option to go back/forward to get the other laughs -- bonus feature
 }));
 
