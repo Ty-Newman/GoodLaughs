@@ -2,7 +2,11 @@ var express = require('express');
 var router = express.Router();
 const db = require('../db/models');
 const bcrypt = require('bcryptjs');
-const { csrfProtection, asyncHandler, validateLogin, handleValidationErrors } = require('../utils');
+const { csrfProtection, asyncHandler, handleValidationErrors } = require('../utils');
+const { loginUser } = require('../auth');
+const { check, body, validationResult } = require('express-validator');
+const { Sequelize } = require('../db/models');
+const Op = Sequelize.Op;
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -12,9 +16,22 @@ router.get('/', function(req, res, next) {
 router.get('/login', csrfProtection, (req, res) => {
   res.render('login', {
     title: 'Login',
-    csrfToken: req.csrfToken()
+    csrfToken: req.csrfToken(),
+    errors: ""
   });
 });
+
+const validateLogin = [
+  check("username")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide your login username."),
+  check("username")
+    .isLength({ max: 30 })
+    .withMessage("Your username cannot be longer than 30 characters."),
+  check("password")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide your email address."),
+]
 
 router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asyncHandler(async (req, res, next) => {
   const {
@@ -22,32 +39,70 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
     password
   } = req.body;
 
-  const user = db.User.findOne({
-    where: {
-      username
-    }
-  });
+  let errors = [];
 
-  if (user !== null) {
-    const passwordMatch = await bcrypt.compare(password, user.hashedPassword.toString());
-
-    if (passwordMatch) {
-      return res.redirect('/');
+  const validatorErrors = validationResult(req);
+  if (validatorErrors.isEmpty()) {
+    const user = await db.User.findOne({ where: { username } });
+    console.log(user)
+    if (user !== null) {
+      const passwordMatch = await bcrypt.compare(password, user.hashedPassword.toString());
+      if (passwordMatch) {
+        req.session.user = {
+          username: user.username,
+          id: user.id,
+        };
+        req.session.save(() => {
+          res.redirect('/');
+        })
+      }
     }
+    errors.push('Login failed for the provided username and password')
+  } else {
+    errors = validatorErrors.array().map((error) => error.msg)
   }
 
-  handleValidationErrors.push('Login failed for the combined email address and password');
-
+  res.render('login', {
+    title: 'Login',
+    csrfToken: req.csrfToken(),
+    errors,
+  });
 }));
 
 router.get('/signup', csrfProtection, (req, res) => {
   res.render('signup', {
     title: 'User Sign Up',
-    csrfToken: req.csrfToken()
+    csrfToken: req.csrfToken(),
+    errors: '',
   });
 });
 
-router.post('/signup', csrfProtection, validateLogin, handleValidationErrors, asyncHandler(async (req, res, next) => {
+const validateSignup = [
+  check("username")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide your login username."),
+  check("username")
+    .isLength({ max: 30 })
+    .withMessage("Your username cannot be longer than 30 characters."),
+  check("email")
+    .isLength({ max: 100 })
+    .withMessage("Your email address cannot be longer than 100 characters."),
+  check("password")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide a different password."),
+  check("confirmPass")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide a different confirmed password."),
+  check("password")
+    .custom((value, { req }) => {
+      if (value !== req.body.confirmPass) {
+        throw new Error("Password and Confirm Password values do not match.");
+      } else {
+        return value;
+      }})
+];
+
+router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, asyncHandler(async (req, res, next) => {
   console.log(req.body, "test")
   const {
     username,
@@ -55,23 +110,47 @@ router.post('/signup', csrfProtection, validateLogin, handleValidationErrors, as
     password
   } = req.body;
 
-  const user = db.User.build({
-    username,
-    email,
-  })
+  let errors = [];
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  user.hashedPassword = hashedPassword;
-  console.log(user)
-  await user.save();
-  console.log(user)
+  const validatorErrors = validationResult(req);
+  if (validatorErrors.isEmpty()) {
+    const user = db.User.build({
+      username,
+      email,
+    });
 
-  req.session.user = user;
+    // check if user already in database
+    const existingUser = await db.User.findOne({ where: { [Op.or]: [
+      { username },
+      { email }
+    ]}});
 
-  req.session.save(() => {
-    res.redirect('/');
-  })
+    if (!existingUser) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user.hashedPassword = hashedPassword;
+      await user.save();
 
+      // log the user in
+      req.session.user = {
+        username: user.username,
+        id: user.id,
+      };
+      req.session.save(() => {
+        res.redirect('/');
+      })
+    }
+    errors.push('Signup failed for the provided username and email')
+    console.log(errors)
+  } else {
+    errors = validatorErrors.array().map((error) => error.msg)
+  }
+
+  console.log(errors);
+  res.render('signup', {
+    title: 'Signup',
+    csrfToken: req.csrfToken(),
+    errors,
+  });
 }));
 
 module.exports = router;
