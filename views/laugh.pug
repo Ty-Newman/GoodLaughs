@@ -1,0 +1,30 @@
+extends laughs.pug
+
+//- see the laugh
+
+//- edit the laugh
+
+//- delete the laugh
+
+ //- table
+  //-   thead: tr
+  //-     th Username
+  //-     th Laugh
+  //-     th Posted
+  //-     th Updated
+  //-     th Bows
+  //-     th LOLs
+  //-     th Review
+    //- tbody
+    //-   each laugh in laughs
+    //-     tr
+    //-       td= laugh.User.username
+    //-       td= body
+    //-       td= createdAt
+    //-       td= updatedAt
+    //-       td= laugh.Rating.bows
+    //-       td= laugh.Rating.lols
+    //-       td= laugh.Review.body
+
+//- show the laugh
+block content

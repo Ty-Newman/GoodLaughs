@@ -16,8 +16,6 @@ router.get('/', function(req, res, next) {
   });
 });
 
-
-
 router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => {
 
   const loggedInUserId = req.session.user.id;
