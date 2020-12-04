@@ -17,8 +17,12 @@ const laughboxNotFoundError = (id) => {
 
 // Laughbox landing page
 router.get('/', csrfProtection, asyncHandler(async (req, res) => {
-  const laughboxes = await db.LaughBox.findAll({ include: 'User'})
-  res.render('laughboxes', { title: 'LaughBoxes', laughboxes });
+  const laughboxes = await db.LaughBox.findAll({ include: ['User'] })
+  res.render('laughboxes', {
+    title: 'LaughBoxes',
+    laughboxes,
+    csrfToken: req.csrfToken()
+  });
 }));
 
 // Create new laughbox
@@ -30,7 +34,7 @@ router.post('/', csrfProtection, asyncHandler(async (req, res) => {
   });
   res.render('laughboxes', {
     title: 'Add Laughbox',
-    name,
+    laughbox,
     csrfToken: req.csrfToken()
   })
 }))

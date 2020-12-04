@@ -1,12 +1,16 @@
 extends layout
+append head
+  link(rel="stylesheet", href="/stylesheets/login.css")
+  link(rel="stylesheet", href="/stylesheets/laughs.css")
+  link(rel="stylesheet", href="/stylesheets/laughboxes.css")
 
 block content
   input(type='hidden' name='_csrf' value=csrfToken)
   form(action='/laughboxes' method='POST')
     div(class='addLaughBox')
-      label(for='laughbox') New LaughBox
-        input(type='text' name='laughbox' placeholder='LaughBox Name' value=name)
-        button(type='submit' class='addButton') Add Laughbox
+      label(for='laughbox') Create a LaughBox
+      input(type='text' name='laughbox' placeholder='LaughBox Name' value=name)
+      button(type='submit' class='addButton') Add LaughBox
   div(class='laughboxes')
     table
       thead(class='laughboxes-list')
