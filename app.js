@@ -13,7 +13,6 @@ const laughsRouter = require('./routes/laughs');
 const laughboxesRouter = require('./routes/laughboxes');
 const reviewsRouter = require('./routes/reviews');
 
-
 const app = express();
 
 // view engine setup
@@ -59,7 +58,8 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  errors = [res.locals.error];
+  res.render('error', { errors });
 });
 
 module.exports = app;

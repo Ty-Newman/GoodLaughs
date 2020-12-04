@@ -2,9 +2,9 @@ var express = require('express');
 var router = express.Router();
 const db = require('../db/models');
 const bcrypt = require('bcryptjs');
-const { csrfProtection, asyncHandler, handleValidationErrors } = require('../utils');
+const { csrfProtection, asyncHandler, handleValidationErrors, loginUserCheck } = require('../utils');
 const { loginUser } = require('../auth');
-const { check, body, validationResult } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 const { Sequelize } = require('../db/models');
 const Op = Sequelize.Op;
 
@@ -57,28 +57,29 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
         errors,
       });
     }
-    if (user !== null) {
-      const passwordMatch = await bcrypt.compare(password, user.hashedPassword.toString());
-      if (passwordMatch) {
-        req.session.user = {
-          username: user.username,
-          id: user.id,
-        };
-        req.session.save()
-        res.redirect('/');
-      } else {
-        errors.push("Invalid password. Please try again.")
-      }
-    } else {
-      errors = validatorErrors.array().map((error) => error.msg)
-    }
 
-      res.render('login', {
-        title: 'Login',
-        csrfToken: req.csrfToken(),
-        errors,
-      });
-}}));
+    const passwordMatch = await bcrypt.compare(password, user.hashedPassword.toString());
+    if (passwordMatch) {
+      req.session.user = {
+        username: user.username,
+        id: user.id,
+      };
+      req.session.save();
+      res.redirect('/');
+    } else {
+      errors.push("Invalid password. Please try again.");
+    }
+    } else {
+    errors = validatorErrors.array().map((error) => error.msg);
+  }
+  if (errors) {
+    res.render('login', {
+      title: 'Login',
+      csrfToken: req.csrfToken(),
+      errors,
+    });
+  }
+}));
 
 router.get('/signup', csrfProtection, (req, res) => {
   const errors = [];
@@ -103,7 +104,8 @@ const validateSignup = [
     .withMessage("Your username cannot be longer than 30 characters."),
   check("email")
     .exists({ checkFalsy: true })
-    .withMessage("Please provide your emaill address.")
+    .withMessage("Please provide an email address."),
+  check("email")
     .isLength({ max: 100 })
     .withMessage("Your email address cannot be longer than 100 characters."),
   check("password")
@@ -122,7 +124,7 @@ const validateSignup = [
 ];
 
 router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, asyncHandler(async (req, res, next) => {
-  console.log(req.body, "test")
+
   const {
     username,
     email,
@@ -138,7 +140,6 @@ router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, a
       email,
     });
 
-    // check if user already in database
     const existingUser = await db.User.findOne({ where: { [Op.or]: [
       { username },
       { email }
@@ -149,13 +150,15 @@ router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, a
       user.hashedPassword = hashedPassword;
       await user.save();
 
-      // log the user in
       req.session.user = {
         username: user.username,
         id: user.id,
       };
-      req.session.save();
-      res.redirect('/');
+      req.session.save(err => {
+        if (err) return next(err);
+        res.redirect('/');
+      });
+      errors.push('Signup failed for the provided username and email');
     }
   } else {
     errors = validatorErrors.array().map((error) => error.msg)
