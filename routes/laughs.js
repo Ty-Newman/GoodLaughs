@@ -68,10 +68,9 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
       userId: userIdInt,
       laughId: laughIdInt
     });
-    console.log('here0')
+
     res.redirect('/');
   } else {
-    console.log('here')
       const errors = validateErrors.array().map((error) => {
       res.render('laughs', {
         title: 'Add a Laugh',
