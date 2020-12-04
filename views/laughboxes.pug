@@ -1,12 +1,12 @@
 extends layout
 
 block content
-  form(action='/laughboxes' method='POST')
   input(type='hidden' name='_csrf' value=csrfToken)
-  div(class='addLaughBox')
-    label(for='laughbox') New LaughBox
-    input(type='text' name='laughbox' placeholder='LaughBox Name' value=name)
-    button(type='submit' class='addButton') Add Laughbox
+  form(action='/laughboxes' method='POST')
+    div(class='addLaughBox')
+      label(for='laughbox') New LaughBox
+        input(type='text' name='laughbox' placeholder='LaughBox Name' value=name)
+        button(type='submit' class='addButton') Add Laughbox
   div(class='laughboxes')
     table
       thead(class='laughboxes-list')

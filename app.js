@@ -40,7 +40,6 @@ app.use(
 store.sync();
 
 app.use('/', indexRouter);
-app.use('/laughboxes', laughboxesRouter);
 app.use('/users', usersRouter);
 app.use('/laughs', laughsRouter);
 app.use('/laughboxes', laughboxesRouter);
