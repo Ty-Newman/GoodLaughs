@@ -84,14 +84,17 @@ const validateSignup = [
     .isLength({ max: 30 })
     .withMessage("Your username cannot be longer than 30 characters."),
   check("email")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide an email address."),
+  check("email")
     .isLength({ max: 100 })
     .withMessage("Your email address cannot be longer than 100 characters."),
   check("password")
     .exists({ checkFalsy: true })
-    .withMessage("Please provide a different password."),
+    .withMessage("Please provide a password."),
   check("confirmPass")
     .exists({ checkFalsy: true })
-    .withMessage("Please provide a different confirmed password."),
+    .withMessage("Please provide a confirmed password."),
   check("password")
     .custom((value, { req }) => {
       if (value !== req.body.confirmPass) {
