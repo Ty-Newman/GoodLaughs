@@ -1,24 +1,50 @@
 extends layout
-
+append head
+  link(rel='stylesheet' href='/stylesheets/laughfeed.css')
 block content
-    table
-        thead: tr
-        th Username
-        th Laugh
-        th Bows
-        th LOLs
-        th Review
-        th Laugh Id
-        th Posted
-        th Updated
-        tbody
-          each laugh in laughs
-            tr
-              td= laugh.User.username
-              td= laugh.body
-              td= laugh.bows
-              td= laugh.lols
-              td= laugh.review
-              td= laugh.id
-              td= laugh.createdAt
-              td= laugh.updatedAt
+  div(id='wrapper')
+    each laugh in laughs
+      div(id='content')
+        h2(id='user-name')= laugh.User.username
+        p(id='body')= laugh.body
+        input(type="checkbox" id="bows")
+        div(class="rate")
+          input(type="radio" id="star5" name="rate" value="5")
+          label(for="star5" title="text") 5 stars
+          input(type="radio" id="star4" name="rate" value="4")
+          label(for="star4" title="text") 4 stars
+          input(type="radio" id="star3" name="rate" value="3")
+          label(for="star3" title="text") 3 stars
+          input(type="radio" id="star2" name="rate" value="2")
+          label(for="star2" title="text") 2 stars
+          input(type="radio" id="star1" name="rate" value="1")
+          label(for="star1" title="text") 1 star
+        div
+      div(id='review-wrapper')
+          a(id='write-review' href='#') Write a Review
+          ul
+            li= laugh.review
+
+
+
+    //- table
+    //-     thead: tr
+    //-     th Username
+    //-     th Laugh
+    //-     th Bows
+    //-     th LOLs
+    //-     th Review
+    //-     th Laugh Id
+    //-     th Posted
+    //-     th Updated
+    //-     tbody
+    //-       each laugh in laughs
+    //-         tr
+    //-           td= laugh.User.username
+    //-           td= laugh.body
+    //-           td= laugh.bows
+    //-           td= laugh.lols
+    //-           td= laugh.review
+    //-           td= laugh.id
+    //-           td= laugh.createdAt
+    //-           td= laugh.updatedAt
