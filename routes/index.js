@@ -9,11 +9,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => {
-  // when you login, send you here - do in other files
-  // have this option on each laugh page - do in other pug file or navbar
+  // when you login, send you here?? - do in other files??
+  // have this option on each laugh page?? - do in other pug file or navbar??
 
   // look to what user is logged in
-  const userId = req.session.user.id
+  const userId = req.session.user.id;
   // get all their laughs
   const laughs = await db.Laugh.findAll({
     where: {
@@ -30,14 +30,27 @@ router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => 
         laughId: laugh.id
       }
     })
-    laugh.ratings = ratings;
+
+    let bows = [];
+    let lols = []
+    if (ratings[0]) {
+      bows = ratings[0].bows;
+      lols = ratings[0].lols;
+    }
+    laugh.bows = bows;
+    laugh.lols = lols;
 
     const reviews = await db.Review.findAll({
       where: {
         laughId: laugh.id
       }
     })
-    laugh.reviews = reviews;
+
+    let review = [];
+    if (reviews[0]) {
+      review = reviews[0].body;
+    }
+    laugh.review = review;
   }
 
   // display most recent 10 laughs
