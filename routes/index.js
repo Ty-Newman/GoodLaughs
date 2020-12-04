@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { csrfProtection, asyncHandler} = require('../utils');
+const { csrfProtection, asyncHandler, loginUserCheck } = require('../utils');
 const db = require('../db/models');
 
 /* GET home page. */
@@ -9,6 +9,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => {
+
+  loginUserCheck(req, res, next);
 
   const loggedInUserId = req.session.user.id;
 
@@ -58,7 +60,6 @@ router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => 
     laugh.review = review;
   }
 
-  // display most recent 10 laughs
   res.render('laughfeed', {
     title: 'Laughs',
     csrfToken: req.csrfToken(),

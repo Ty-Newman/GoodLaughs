@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const db = require('../db/models');
 const bcrypt = require('bcryptjs');
-const { csrfProtection, asyncHandler, handleValidationErrors } = require('../utils');
+const { csrfProtection, asyncHandler, handleValidationErrors, loginUserCheck } = require('../utils');
 const { loginUser } = require('../auth');
 const { check, body, validationResult } = require('express-validator');
 const { Sequelize } = require('../db/models');
@@ -121,7 +121,6 @@ router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, a
       email,
     });
 
-    // check if user already in database
     const existingUser = await db.User.findOne({ where: { [Op.or]: [
       { username },
       { email }
@@ -132,61 +131,24 @@ router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, a
       user.hashedPassword = hashedPassword;
       await user.save();
 
-      // log the user in
       req.session.user = {
         username: user.username,
         id: user.id,
       };
       req.session.save(() => {
         res.redirect('/');
-      })
+      });
     }
     errors.push('Signup failed for the provided username and email')
-    console.log(errors)
   } else {
     errors = validatorErrors.array().map((error) => error.msg)
   }
 
-  console.log(errors);
   res.render('signup', {
     title: 'Signup',
     csrfToken: req.csrfToken(),
     errors,
   });
 }));
-
-// router.get('/laughs', csrfProtection, (req, res) => {
-//   const laugh = db.Laugh.build();
-//   res.render('laughs', {
-//     title: 'Add a Laugh',
-//     body: '',
-//     errors: '',
-//     csrfToken: req.csrfToken(),
-//   });
-// })
-
-// router.post('/laughs', csrfProtection, asyncHandler(async (req, res) => {
-//   const { body } = req.body;
-
-//   const laugh = db.Laugh.build({ body });
-
-//   const validateErrors = validationResult(req);
-
-//   if (validateErrors.isEmpty()) {
-//     await laugh.save(() => {
-//       res.redirect('/')});
-//   } else {
-//     const errors = validateErrors.array().map((error) => {
-//       return error.msg
-//     })
-//     console.log(errors)
-//     res.render('laughs', {
-//       title: 'Add a Laugh',
-//       body,
-//       errors,
-//       csrfToken: req.csrfToken(),
-//     });
-//   };
-// }))
 
 module.exports = router;
