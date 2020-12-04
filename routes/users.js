@@ -81,10 +81,16 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
 }}));
 
 router.get('/signup', csrfProtection, (req, res) => {
+  const errors = [];
+
+  if (req.session.user) {
+    errors.push(`You are currently logged in as: ${req.session.user.username}`)
+  }
+
   res.render('signup', {
     title: 'User Sign Up',
     csrfToken: req.csrfToken(),
-    errors: '',
+    errors,
   });
 });
 
@@ -148,10 +154,8 @@ router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, a
         username: user.username,
         id: user.id,
       };
-      req.session.save(err => {
-        if (err) return next(err);
-        res.redirect('/')
-      })
+      req.session.save();
+      res.redirect('/');
     }
   } else {
     errors = validatorErrors.array().map((error) => error.msg)

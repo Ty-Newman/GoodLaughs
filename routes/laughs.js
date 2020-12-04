@@ -40,7 +40,7 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
   const lolsInt = parseInt(lols);
 
   const laugh = await db.Laugh.build({ body: laughBody, userId });
-  
+
   const validateErrors = validationResult(req);
 
   if (validateErrors.isEmpty()) {
@@ -98,7 +98,7 @@ router.put('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(asy
   if (laugh) {
     await laugh.update({ body: req.body.body })
   } else {
-    next(laughNotFoundError(taskId));
+    next(laughNotFoundError(laughId));
   }
 }))
 
