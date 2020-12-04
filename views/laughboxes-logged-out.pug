@@ -1,0 +1,17 @@
+extends layout
+append head
+    //- link(rel='stylesheet' href='/stylesheets/login.css')
+
+block content
+    br
+    if errors.length
+        each error in errors
+            div(id='errors')= error
+    div
+      #main
+        div
+        #sideBar
+          h1= title
+          a(href="/users/login") Log In
+          div
+          a(href="/users/signup") Don't have an account?
