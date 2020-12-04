@@ -4,7 +4,7 @@ const db = require('../db/models');
 const bcrypt = require('bcryptjs');
 const { csrfProtection, asyncHandler, handleValidationErrors, loginUserCheck } = require('../utils');
 const { loginUser } = require('../auth');
-const { check, body, validationResult } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 const { Sequelize } = require('../db/models');
 const Op = Sequelize.Op;
 
@@ -105,7 +105,7 @@ const validateSignup = [
 ];
 
 router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, asyncHandler(async (req, res, next) => {
-  console.log(req.body, "test")
+
   const {
     username,
     email,

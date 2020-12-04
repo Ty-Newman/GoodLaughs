@@ -74,7 +74,6 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
 
     res.redirect('/');
   } else {
-      console.log('here')
       const errors = validateErrors.array().map((error) => {
         return error.msg;
       });

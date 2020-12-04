@@ -11,7 +11,6 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const laughsRouter = require('./routes/laughs');
 
-
 const app = express();
 
 // view engine setup
