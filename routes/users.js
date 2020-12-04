@@ -14,10 +14,15 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/login', csrfProtection, (req, res) => {
+  const errors = [];
+
+  if (req.session.user) {
+    errors.push(`You are currently logged in as: ${req.session.user.username}`)
+  }
   res.render('login', {
     title: 'Login',
     csrfToken: req.csrfToken(),
-    errors: ""
+    errors
   });
 });
 
@@ -44,20 +49,28 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
   const validatorErrors = validationResult(req);
   if (validatorErrors.isEmpty()) {
     const user = await db.User.findOne({ where: { username } });
-    if (user !== null || user === undefined) {
-      const passwordMatch = await bcrypt.compare(password, user.hashedPassword.toString());
-      if (passwordMatch) {
-        req.session.user = {
-          username: user.username,
-          id: user.id,
-        };
-        req.session.save();
-        res.redirect('/');
-      }
+    if (!user) {
+      errors.push("Invalid login ID. Please try again.")
+      res.render('login', {
+        title: 'Login',
+        csrfToken: req.csrfToken(),
+        errors,
+      });
     }
-    errors.push('Login failed for the provided username and password')
-  } else {
-    errors = validatorErrors.array().map((error) => error.msg)
+
+    const passwordMatch = await bcrypt.compare(password, user.hashedPassword.toString());
+    if (passwordMatch) {
+      req.session.user = {
+        username: user.username,
+        id: user.id,
+      };
+      req.session.save();
+      res.redirect('/');
+    } else {
+      errors.push("Invalid password. Please try again.");
+    }
+    } else {
+    errors = validatorErrors.array().map((error) => error.msg);
   }
   if (errors) {
     res.render('login', {
@@ -91,14 +104,14 @@ const validateSignup = [
     .withMessage("Your email address cannot be longer than 100 characters."),
   check("password")
     .exists({ checkFalsy: true })
-    .withMessage("Please provide a password."),
+    .withMessage("Please provide your password."),
   check("confirmPass")
     .exists({ checkFalsy: true })
-    .withMessage("Please provide a confirmed password."),
+    .withMessage("Please provide your password again."),
   check("password")
     .custom((value, { req }) => {
       if (value !== req.body.confirmPass) {
-        throw new Error("Password and Confirm Password values do not match.");
+        throw new Error("Your passwords do not match.");
       } else {
         return value;
       }})
@@ -116,7 +129,7 @@ router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, a
 
   const validatorErrors = validationResult(req);
   if (validatorErrors.isEmpty()) {
-    const user = db.User.build({
+    const user = await db.User.build({
       username,
       email,
     });
@@ -135,11 +148,12 @@ router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, a
         username: user.username,
         id: user.id,
       };
-      req.session.save(() => {
+      req.session.save(err => {
+        if (err) return next(err);
         res.redirect('/');
       });
+      errors.push('Signup failed for the provided username and email');
     }
-    errors.push('Signup failed for the provided username and email')
   } else {
     errors = validatorErrors.array().map((error) => error.msg)
   }

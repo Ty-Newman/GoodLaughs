@@ -5,8 +5,18 @@ const db = require('../db/models');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'GoodLaughs' });
+
+  if (req.session.user) {
+    username = req.session.user.username;
+  }
+
+  res.render('index', {
+    title: 'GoodLaughs',
+    username,
+  });
 });
+
+
 
 router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => {
 
@@ -65,7 +75,7 @@ router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => 
     csrfToken: req.csrfToken(),
     laughs
   });
-  
+
   // option to go back/forward to get the other laughs -- bonus feature
 }));
 
