@@ -82,10 +82,16 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
 }));
 
 router.get('/signup', csrfProtection, (req, res) => {
+  const errors = [];
+
+  if (req.session.user) {
+    errors.push(`You are currently logged in as: ${req.session.user.username}`)
+  }
+
   res.render('signup', {
     title: 'User Sign Up',
     csrfToken: req.csrfToken(),
-    errors: '',
+    errors,
   });
 });
 

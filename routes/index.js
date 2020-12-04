@@ -5,9 +5,10 @@ const db = require('../db/models');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  let username = [];
 
   if (req.session.user) {
-    username = req.session.user.username;
+    username.push(req.session.user.username);
   }
 
   res.render('index', {
@@ -17,13 +18,9 @@ router.get('/', function(req, res, next) {
 });
 
 
-
 router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => {
-
   loginUserCheck(req, res, next);
-
   const loggedInUserId = req.session.user.id;
-
   const laughs = await db.Laugh.findAll({
     where: {
       userId: loggedInUserId
