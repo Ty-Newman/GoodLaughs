@@ -5,10 +5,9 @@ const db = require('../db/models');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  let username = [];
 
   if (req.session.user) {
-    username.push(req.session.user.username);
+    username = req.session.user.username;
   }
 
   res.render('index', {
