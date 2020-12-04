@@ -1,8 +1,10 @@
 *{
     font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
+/* Styles for the 5 star rating */
 .rate {
-    float: left;
+    float: right;
     height: 46px;
     padding: 0 10px;
 }
@@ -35,4 +37,52 @@
 .rate > input:checked ~ label:hover ~ label,
 .rate > label:hover ~ input:checked ~ label {
     color: #c59b08;
+}
+
+
+/* Feed styles */
+
+#wrapper{
+    width: 50%;
+    margin: 0 auto;
+}
+#content{
+    padding: 2em;
+    margin-top: 1em;
+    background-color: whitesmoke;
+    border: solid 2px black;
+    box-shadow: 3px 6px #777;
+    border-radius: 10px 10px 0px 0px;
+    border-bottom: none;
+}
+#review-wrapper{
+    background-color: lightgray;
+    border: solid 2px black;
+    border-top: none;
+    box-shadow: 3px 6px #777;
+    min-height: 100px;
+    border-radius: 0px 0px 10px 10px;
+}
+
+#user-name{
+    display: flex;
+    justify-content: left;
+    align-content: flex-start;
+    font-size: 16px;
+}
+#body{
+    padding: 1em;
+}
+#review-wrapper ul{
+    margin: 0 auto;
+    padding-top: 1em;
+    list-style-type: none;
+}
+#review-wrapper li{
+text-decoration: none;
+}
+#write-review{
+    float: right;
+    padding: 0.5em;
+    padding-right: 3em;
 }

@@ -3,11 +3,11 @@ append head
   link(rel='stylesheet' href='/stylesheets/laughfeed.css')
 block content
   div(id='wrapper')
-    div(id='content')
-      each laugh in laughs
+    each laugh in laughs
+      div(id='content')
         h2(id='user-name')= laugh.User.username
         p(id='body')= laugh.body
-        input(type="checkbox" id="bows" checked= laugh.ratings.bows)
+        input(type="checkbox" id="bows")
         div(class="rate")
           input(type="radio" id="star5" name="rate" value="5")
           label(for="star5" title="text") 5 stars
@@ -20,30 +20,31 @@ block content
           input(type="radio" id="star1" name="rate" value="1")
           label(for="star1" title="text") 1 star
         div
-    div(id='review-wrapper')
+      div(id='review-wrapper')
+          a(id='write-review' href='#') Write a Review
+          ul
+            li= laugh.review
 
-      ul
 
 
-
-    table
-        thead: tr
-        th Username
-        th Laugh
-        th Bows
-        th LOLs
-        th Review
-        th Laugh Id
-        th Posted
-        th Updated
-        tbody
-          each laugh in laughs
-            tr
-              td= laugh.User.username
-              td= laugh.body
-              td= laugh.bows
-              td= laugh.lols
-              td= laugh.review
-              td= laugh.id
-              td= laugh.createdAt
-              td= laugh.updatedAt
+    //- table
+    //-     thead: tr
+    //-     th Username
+    //-     th Laugh
+    //-     th Bows
+    //-     th LOLs
+    //-     th Review
+    //-     th Laugh Id
+    //-     th Posted
+    //-     th Updated
+    //-     tbody
+    //-       each laugh in laughs
+    //-         tr
+    //-           td= laugh.User.username
+    //-           td= laugh.body
+    //-           td= laugh.bows
+    //-           td= laugh.lols
+    //-           td= laugh.review
+    //-           td= laugh.id
+    //-           td= laugh.createdAt
+    //-           td= laugh.updatedAt
