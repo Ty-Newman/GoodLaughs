@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { csrfProtection, asyncHandler} = require('../utils');
 const db = require('../db/models');
-const {check, validationResult} = require('express-validator');
-const { noExtendLeft } = require('sequelize/types/lib/operators');
+const { csrfProtection, asyncHandler} = require('../utils');
+const { check, validationResult } = require('express-validator');
 
 const validateLaughbox = [
   // TODO: create validation for laughbox
@@ -25,10 +24,14 @@ router.get('/', csrfProtection, (req, res) => {
     errors.push("You must log in to view your laughbox!")
     res.render('laughboxes-logged-out', {
       title: 'Please log in',
-      csrfToken: req.csrfToken(),
+      errors,
     })
-
   }
+  // res.render('laughboxes', {
+  //   title: 'Your Laughboxes',
+  //   csrfToken: req.csrfToken(),
+  // })
+  res.send('testing landing page for logged in user')
 })
 
 // Create new laughbox
@@ -49,7 +52,7 @@ router.patch('/:id(\\d+)', csrfProtection, asyncHandler(async (req, res) => {
   if (laughbox) {
     await laughbox.update({ name: req.body.name })
   } else {
-    noExtendLeft(laughboxNotFoundError(laughboxId))
+    next(laughboxNotFoundError(laughboxId))
   }
 }))
 
@@ -62,7 +65,7 @@ router.delete('/:id(\\d+)', csrfProtection, asyncHandler(async (req, res) => {
     await laughbox.destroy();
     res.status(204).end();
   } else {
-    noExtendLeft(laughboxNotFoundError(laughboxId))
+    next(laughboxNotFoundError(laughboxId))
   }
 }))
 
