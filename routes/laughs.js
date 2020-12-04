@@ -22,7 +22,7 @@ const laughNotFoundError = (id) => {
   return err;
 }
 
-router.get('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHandler(async (req, res, next) => {
+router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
   const laugh = await db.Laugh.build();
   res.render('laughs', {
     title: 'Add a Laugh',
@@ -68,9 +68,10 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
       userId: userIdInt,
       laughId: laughIdInt
     });
-
+    console.log('here0')
     res.redirect('/');
   } else {
+    console.log('here')
       const errors = validateErrors.array().map((error) => {
       res.render('laughs', {
         title: 'Add a Laugh',
@@ -78,7 +79,7 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
         errors,
         csrfToken: req.csrfToken(),
       });
-      return error.msg
+      // return error.msg
     })
   };
 }))
