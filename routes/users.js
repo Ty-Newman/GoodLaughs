@@ -148,8 +148,10 @@ router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, a
         username: user.username,
         id: user.id,
       };
-      req.session.save()
-      res.redirect('/');
+      req.session.save(err => {
+        if (err) return next(err);
+        res.redirect('/')
+      })
     }
   } else {
     errors = validatorErrors.array().map((error) => error.msg)
