@@ -7,7 +7,12 @@ const { check, body, validationResult } = require('express-validator');
 const Op = Sequelize.Op;
 
 const validateLaugh = [
-  // TODO: Build validation for a laguh post
+  check('laughBody')
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide a joke."),
+  check('lols')
+    .isFloat({ min: 1, max: 5})
+    .withMessage("Please provide a number between 1 and 5.")
 ]
 
 const laughNotFoundError = (id) => {
@@ -17,7 +22,7 @@ const laughNotFoundError = (id) => {
   return err;
 }
 
-router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
+router.get('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHandler(async (req, res, next) => {
   const laugh = await db.Laugh.build();
   res.render('laughs', {
     title: 'Add a Laugh',
@@ -27,7 +32,7 @@ router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
   });
 }));
 
-router.post('/', csrfProtection, asyncHandler(async (req, res) => {
+router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHandler(async (req, res) => {
   const { laughBody, bows, lols, reviewBody } = req.body;
   const userId = req.session.user.id;
   const userIdInt = parseInt(userId);

@@ -7,6 +7,10 @@ block content
   a(href="/") Return to Main Page
   br
   h2 Laughs
+  if errors.length
+    br
+    each error in errors
+        div(id='errors')= error
   br
   form(action='/laughs' method='POST')
     ul(class='flex-outer')
@@ -26,15 +30,15 @@ block content
       li
         button(type='submit' name='submit' id='submit' value='Laughs') Submit
 
-  table
-    thead: tr
-      th Username
-      th Laugh
-      th Posted
-      th Updated
-      th Bows
-      th LOLs
-      th Review
+  //- table
+  //-   thead: tr
+  //-     th Username
+  //-     th Laugh
+  //-     th Posted
+  //-     th Updated
+  //-     th Bows
+  //-     th LOLs
+  //-     th Review
     //- tbody
     //-   each laugh in laughs
     //-     tr
