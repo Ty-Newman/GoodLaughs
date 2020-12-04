@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../db/models');
 const { Sequelize } = require('../db/models');
 const { csrfProtection, asyncHandler, handleValidationErrors} = require('../utils');
-const { check, body, validationResult } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 
 const validateReview = [
   check('reviewBody')
@@ -44,13 +44,12 @@ router.get('/:id(\\d+)', csrfProtection, asyncHandler(async (req, res, next) => 
   }
 }))
 
+// Add a new review
 router.post('/:id(\\d+)', csrfProtection, validateReview, handleValidationErrors, asyncHandler(async (req, res, next) => {
   const { reviewBody } = req.body;
   const userId = parseInt(req.session.user.id)
   const laughId = parseInt(req.params.id, 10);
-  const laugh = await db.Laugh.findByPk(laughId);
 
-  if (laugh) {
     const validateErrors = validationResult(req);
 
     if (validateErrors.insEmpty()) {
@@ -71,12 +70,9 @@ router.post('/:id(\\d+)', csrfProtection, validateReview, handleValidationErrors
         })
       })
     }
-  } else {
-    next(laughNotFoundError(laughId));
-  }
-
 }))
 
+// Delete a review
 router.delete('/:id(\\d+)', csrfProtection, handleValidationErrors, asyncHandler(async (req, res, next) => {
   const reviewId = parseInt(req.params.id, 10);
   const review = await db.Review.findByPk(reviewId);
@@ -87,6 +83,7 @@ router.delete('/:id(\\d+)', csrfProtection, handleValidationErrors, asyncHandler
   } else {
     next(reviewNotFoundError(reviewId))
   }
+
 }))
 
 module.exports = router;
