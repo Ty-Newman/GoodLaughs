@@ -129,13 +129,7 @@ router.put('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(asy
 }))
 
 // Delete a specific laugh
-<<<<<<< Updated upstream
-router.delete('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(async (req, res, next) => {
-  loginUserCheck(req, res, next);
-
-=======
 router.delete('/:id(\\d+)', asyncHandler(async (req, res, next) => {
->>>>>>> Stashed changes
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
 
