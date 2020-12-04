@@ -22,6 +22,7 @@ router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => 
     include: db.User
   });
 
+  // may break when we add reviews and ratings
   for (let i = 0; i < laughs.length; i ++) {
     const laugh = laughs[i];
     const ratings = await db.Rating.findAll({
