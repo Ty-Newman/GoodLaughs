@@ -5,20 +5,20 @@ block content
         thead: tr
         th Username
         th Laugh
+        th Bows
+        th LOLs
+        th Review
         th Laugh Id
         th Posted
         th Updated
-        //- th Bows
-        //- th LOLs
-        //- th Review
         tbody
           each laugh in laughs
             tr
               td= laugh.User.username
               td= laugh.body
+              td= laugh.bows
+              td= laugh.lols
+              td= laugh.review
               td= laugh.id
               td= laugh.createdAt
               td= laugh.updatedAt
-        //-       td= laugh.Rating.bows
-        //-       td= laugh.Rating.lols
-        //-       td= laugh.Review.body

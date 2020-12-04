@@ -20,42 +20,54 @@ router.get('/', function(req, res, next) {
 
 
 router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => {
-  // when you login, send you here - do in other files
-  // have this option on each laugh page - do in other pug file or navbar
 
-  // look to what user is logged in
-  const userId = req.session.user.id
-  // get all their laughs
+  const loggedInUserId = req.session.user.id;
+
   const laughs = await db.Laugh.findAll({
     where: {
-      userId
+      userId: loggedInUserId
     },
     include: db.User
   });
 
-  // console.log(laughs.keys())
+  for (let i = 0; i < laughs.length; i ++) {
+    const laugh = laughs[i];
+    const ratings = await db.Rating.findAll({
+      where: {
+        laughId: laugh.id
+      }
+    })
 
-  // for (const key in laughs[0]) {
-  //   console.log(laughs[0][key])
-  // }
+    let bows = [];
+    let lols = [];
+    if (ratings[0]) {
+      bows = ratings[0].bows;
+      lols = ratings[0].lols;
+    }
+    laugh.bows = bows;
+    laugh.lols = lols;
 
-  // console.log(laughs[0].map((laugh) => console.log(laugh)));
+    const reviews = await db.Review.findAll({
+      where: {
+        laughId: laugh.id
+      }
+    })
 
-  // const laughReviews = laughs.map(laugh => {
-  //   db.Review.findAll({
-  //     where: {
-  //       laughId: laugh.id
-  //     }
-  //   })
-  // });
-
-  // const laughRatings = laughs.map(laugh => {
-  //   db.Rating.findAll({
-  //     where: {
-  //       laughId: laugh.id
-  //     }
-  //   })
-  // });
+    // if we add multiple reviews
+    // for no or one laugh
+      // attach the review to the laugh
+      // append the laugh to laughs
+    // for more than one laugh
+      // make an inner for loop over each review
+        // create a copy of the laugh
+        // attach the review to the laugh copy
+        // append the laugh copy to laughs
+    let review = [];
+    if (reviews[0]) {
+      review = reviews[0].body;
+    }
+    laugh.review = review;
+  }
 
   // display most recent 10 laughs
   res.render('laughfeed', {
