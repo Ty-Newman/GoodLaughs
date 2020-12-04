@@ -71,6 +71,7 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
 
     res.redirect('/');
   } else {
+      console.log('here')
       const errors = validateErrors.array().map((error) => {
       res.render('laughs', {
         title: 'Add a Laugh',
@@ -78,7 +79,6 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
         errors,
         csrfToken: req.csrfToken(),
       });
-      // return error.msg
     })
   };
 }))

@@ -30,7 +30,7 @@ const validateLogin = [
     .withMessage("Your username cannot be longer than 30 characters."),
   check("password")
     .exists({ checkFalsy: true })
-    .withMessage("Please provide your email address."),
+    .withMessage("Please provide your password."),
 ]
 
 router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asyncHandler(async (req, res, next) => {
@@ -51,15 +51,15 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
           username: user.username,
           id: user.id,
         };
-        console.log(req.session)
-        req.session.save(() => {
-          res.redirect('/');
-        })
+        req.session.save();
+        res.redirect('/');
       }
     }
     errors.push('Login failed for the provided username and password')
   } else {
     errors = validatorErrors.array().map((error) => error.msg)
+  }
+  if (errors) {
     res.render('login', {
       title: 'Login',
       csrfToken: req.csrfToken(),

@@ -12,15 +12,17 @@ const handleValidationErrors = (req, res, next) => {
   if (!validationErrors.isEmpty()) {
     const errors = validationErrors.array().map((error) => error.msg);
 
-    const err = Error("Bad request.");
+    const urlInSections = req.originalUrl.split('/');
+    const endOfUrl = urlInSections[urlInSections.length - 1];
+
+    const err = Error("Errors");
     err.errors = errors;
     err.status = 400;
-    err.title = "Bad request.";
-
-    res.render(req.path.substring(1), {
+    
+    res.render(endOfUrl, {
       title: err.title,
       csrfToken: req.csrfToken(),
-      errors: err.errors,
+      errors: err.errors
     });
 
     return next(err);
