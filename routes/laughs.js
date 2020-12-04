@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express();
+const router = express.Router();
 const db = require('../db/models');
 const { Sequelize } = require('../db/models');
 const { csrfProtection, asyncHandler, handleValidationErrors } = require('../utils');
