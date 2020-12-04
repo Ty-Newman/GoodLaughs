@@ -6,25 +6,27 @@ extends laughs.pug
 
 //- delete the laugh
 
- //- table
-  //-   thead: tr
-  //-     th Username
-  //-     th Laugh
-  //-     th Posted
-  //-     th Updated
-  //-     th Bows
-  //-     th LOLs
-  //-     th Review
-    //- tbody
-    //-   each laugh in laughs
-    //-     tr
-    //-       td= laugh.User.username
-    //-       td= body
-    //-       td= createdAt
-    //-       td= updatedAt
-    //-       td= laugh.Rating.bows
-    //-       td= laugh.Rating.lols
-    //-       td= laugh.Review.body
 
 //- show the laugh
 block content
+    h1= laugh.id
+    h1= review
+    h1= rating
+    table
+    thead: tr
+      th Username
+      th Laugh
+      th Posted
+      th Updated
+      th Bows
+      th LOLs
+      th Review
+    tbody
+        tr
+          td= rating
+          td= laugh.body
+          td= laugh.createdAt
+          td= laugh.updatedAt
+          td= rating.bows
+          td= rating.lols
+          td= review.body

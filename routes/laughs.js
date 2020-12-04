@@ -26,7 +26,6 @@ router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
 
   loginUserCheck(req, res, next);
 
-  const laugh = await db.Laugh.build();
   res.render('laughs', {
     title: 'Add a Laugh',
     body: '',
@@ -42,19 +41,18 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
   const bowsBoolean = (bows === 'on') ? true : false;
   const lolsInt = parseInt(lols);
 
-  const laugh = await db.Laugh.build({ body: laughBody, userId });
-  
   const validateErrors = validationResult(req);
 
   if (validateErrors.isEmpty()) {
-    await laugh.save();
+    await db.Laugh.create({ body: laughBody, userId });
     const savedLaugh = await db.Laugh.findOne({
       where: {
         [Op.and] : [
           { userId: userIdInt },
           { body: laughBody }
         ]
-      }
+      },
+      include: User
     });
 
     const laughIdInt = parseInt(savedLaugh.id);
@@ -87,10 +85,33 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
 }))
 
 // Retrieve a specific laugh
-router.get('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(async (req, res, next) => {
+router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
-  res.render('laughs', { laugh })
+  const userId = req.session.user.id;
+  const userIdInt = parseInt(userId);
+  const rating = await db.Rating.findOne(
+    {
+      where: {
+        [Op.and] : [
+          { userId: userIdInt },
+          { laughId }
+        ]
+      },
+      include: User
+    }
+  );
+  const review = await db.Review.findOne(
+    {
+      where: {
+        [Op.and] : [
+          { userId: userIdInt },
+          { laughId }
+        ]
+      }
+    }
+  );
+  res.render('laugh', { laugh, rating, review });
 }))
 
 // Update a specific laugh
@@ -108,9 +129,13 @@ router.put('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(asy
 }))
 
 // Delete a specific laugh
+<<<<<<< Updated upstream
 router.delete('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(async (req, res, next) => {
   loginUserCheck(req, res, next);
 
+=======
+router.delete('/:id(\\d+)', asyncHandler(async (req, res, next) => {
+>>>>>>> Stashed changes
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
 
