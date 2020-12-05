@@ -11,7 +11,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const laughsRouter = require('./routes/laughs');
 const laughboxesRouter = require('./routes/laughboxes');
-
+const reviewsRouter = require('./routes/reviews');
 
 const app = express();
 
@@ -43,6 +43,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/laughs', laughsRouter);
 app.use('/laughboxes', laughboxesRouter);
+app.use('/reviews', reviewsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -57,7 +58,8 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  errors = [res.locals.error];
+  res.render('error', { errors });
 });
 
 module.exports = app;

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/models');
 const { Sequelize } = require('../db/models');
-const { csrfProtection, asyncHandler, handleValidationErrors } = require('../utils');
+const { csrfProtection, asyncHandler, handleValidationErrors, loginUserCheck } = require('../utils');
 const { check, body, validationResult } = require('express-validator');
 const Op = Sequelize.Op;
 
@@ -23,11 +23,14 @@ const laughNotFoundError = (id) => {
 }
 
 router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
+
+  loginUserCheck(req, res, next);
+
   const laugh = await db.Laugh.build();
   res.render('laughs', {
     title: 'Add a Laugh',
     body: '',
-    errors: '',
+    errors: '', 
     csrfToken: req.csrfToken(),
   });
 }));
@@ -40,7 +43,7 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
   const lolsInt = parseInt(lols);
 
   const laugh = await db.Laugh.build({ body: laughBody, userId });
-  
+
   const validateErrors = validationResult(req);
 
   if (validateErrors.isEmpty()) {
@@ -72,14 +75,14 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
     res.redirect('/');
   } else {
       const errors = validateErrors.array().map((error) => {
+        return error.msg;
+      });
       res.render('laughs', {
         title: 'Add a Laugh',
         body,
         errors,
         csrfToken: req.csrfToken(),
       });
-      // return error.msg
-    })
   };
 }))
 
@@ -92,18 +95,22 @@ router.get('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(asy
 
 // Update a specific laugh
 router.put('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(async (req, res, next) => {
+  loginUserCheck(req, res, next);
+
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
 
   if (laugh) {
     await laugh.update({ body: req.body.body })
   } else {
-    next(laughNotFoundError(taskId));
+    next(laughNotFoundError(laughId));
   }
 }))
 
 // Delete a specific laugh
 router.delete('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(async (req, res, next) => {
+  loginUserCheck(req, res, next);
+
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
 

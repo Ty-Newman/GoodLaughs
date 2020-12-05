@@ -1,17 +1,26 @@
 var express = require('express');
 var router = express.Router();
-const { csrfProtection, asyncHandler} = require('../utils');
+const { csrfProtection, asyncHandler, loginUserCheck } = require('../utils');
 const db = require('../db/models');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'GoodLaughs' });
+  let username = [];
+
+  if (req.session.user) {
+    username.push(req.session.user.username);
+  }
+
+  res.render('index', {
+    title: 'GoodLaughs',
+    username,
+  });
 });
 
+
 router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => {
-
+  loginUserCheck(req, res, next);
   const loggedInUserId = req.session.user.id;
-
   const laughs = await db.Laugh.findAll({
     where: {
       userId: loggedInUserId
@@ -58,13 +67,12 @@ router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => 
     laugh.review = review;
   }
 
-  // display most recent 10 laughs
   res.render('laughfeed', {
     title: 'Laughs',
     csrfToken: req.csrfToken(),
     laughs
   });
-  
+
   // option to go back/forward to get the other laughs -- bonus feature
 }));
 

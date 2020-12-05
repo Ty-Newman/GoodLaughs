@@ -2,9 +2,9 @@ var express = require('express');
 var router = express.Router();
 const db = require('../db/models');
 const bcrypt = require('bcryptjs');
-const { csrfProtection, asyncHandler, handleValidationErrors } = require('../utils');
+const { csrfProtection, asyncHandler, handleValidationErrors, loginUserCheck } = require('../utils');
 const { loginUser } = require('../auth');
-const { check, body, validationResult } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 const { Sequelize } = require('../db/models');
 const Op = Sequelize.Op;
 
@@ -14,10 +14,15 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/login', csrfProtection, (req, res) => {
+  const errors = [];
+
+  if (req.session.user) {
+    errors.push(`You are currently logged in as: ${req.session.user.username}`)
+  }
   res.render('login', {
     title: 'Login',
     csrfToken: req.csrfToken(),
-    errors: ""
+    errors
   });
 });
 
@@ -30,7 +35,7 @@ const validateLogin = [
     .withMessage("Your username cannot be longer than 30 characters."),
   check("password")
     .exists({ checkFalsy: true })
-    .withMessage("Please provide your email address."),
+    .withMessage("Please provide your password."),
 ]
 
 router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asyncHandler(async (req, res, next) => {
@@ -44,22 +49,30 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
   const validatorErrors = validationResult(req);
   if (validatorErrors.isEmpty()) {
     const user = await db.User.findOne({ where: { username } });
-    if (user !== null || user === undefined) {
-      const passwordMatch = await bcrypt.compare(password, user.hashedPassword.toString());
-      if (passwordMatch) {
-        req.session.user = {
-          username: user.username,
-          id: user.id,
-        };
-        console.log(req.session)
-        req.session.save(() => {
-          res.redirect('/');
-        })
-      }
+    if (!user) {
+      errors.push("Invalid login ID. Please try again.")
+      res.render('login', {
+        title: 'Login',
+        csrfToken: req.csrfToken(),
+        errors,
+      });
     }
-    errors.push('Login failed for the provided username and password')
-  } else {
-    errors = validatorErrors.array().map((error) => error.msg)
+
+    const passwordMatch = await bcrypt.compare(password, user.hashedPassword.toString());
+    if (passwordMatch) {
+      req.session.user = {
+        username: user.username,
+        id: user.id,
+      };
+      req.session.save();
+      res.redirect('/');
+    } else {
+      errors.push("Invalid password. Please try again.");
+    }
+    } else {
+    errors = validatorErrors.array().map((error) => error.msg);
+  }
+  if (errors) {
     res.render('login', {
       title: 'Login',
       csrfToken: req.csrfToken(),
@@ -69,10 +82,16 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
 }));
 
 router.get('/signup', csrfProtection, (req, res) => {
+  const errors = [];
+
+  if (req.session.user) {
+    errors.push(`You are currently logged in as: ${req.session.user.username}`)
+  }
+
   res.render('signup', {
     title: 'User Sign Up',
     csrfToken: req.csrfToken(),
-    errors: '',
+    errors,
   });
 });
 
@@ -84,25 +103,28 @@ const validateSignup = [
     .isLength({ max: 30 })
     .withMessage("Your username cannot be longer than 30 characters."),
   check("email")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide an email address."),
+  check("email")
     .isLength({ max: 100 })
     .withMessage("Your email address cannot be longer than 100 characters."),
   check("password")
     .exists({ checkFalsy: true })
-    .withMessage("Please provide a different password."),
+    .withMessage("Please provide your password."),
   check("confirmPass")
     .exists({ checkFalsy: true })
-    .withMessage("Please provide a different confirmed password."),
+    .withMessage("Please provide your password again."),
   check("password")
     .custom((value, { req }) => {
       if (value !== req.body.confirmPass) {
-        throw new Error("Password and Confirm Password values do not match.");
+        throw new Error("Your passwords do not match.");
       } else {
         return value;
       }})
 ];
 
 router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, asyncHandler(async (req, res, next) => {
-  console.log(req.body, "test")
+
   const {
     username,
     email,
@@ -113,12 +135,11 @@ router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, a
 
   const validatorErrors = validationResult(req);
   if (validatorErrors.isEmpty()) {
-    const user = db.User.build({
+    const user = await db.User.build({
       username,
       email,
     });
 
-    // check if user already in database
     const existingUser = await db.User.findOne({ where: { [Op.or]: [
       { username },
       { email }
@@ -129,61 +150,25 @@ router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, a
       user.hashedPassword = hashedPassword;
       await user.save();
 
-      // log the user in
       req.session.user = {
         username: user.username,
         id: user.id,
       };
-      req.session.save(() => {
+      req.session.save(err => {
+        if (err) return next(err);
         res.redirect('/');
-      })
+      });
+      errors.push('Signup failed for the provided username and email');
     }
-    errors.push('Signup failed for the provided username and email')
-    console.log(errors)
   } else {
     errors = validatorErrors.array().map((error) => error.msg)
   }
 
-  console.log(errors);
   res.render('signup', {
     title: 'Signup',
     csrfToken: req.csrfToken(),
     errors,
   });
 }));
-
-// router.get('/laughs', csrfProtection, (req, res) => {
-//   const laugh = db.Laugh.build();
-//   res.render('laughs', {
-//     title: 'Add a Laugh',
-//     body: '',
-//     errors: '',
-//     csrfToken: req.csrfToken(),
-//   });
-// })
-
-// router.post('/laughs', csrfProtection, asyncHandler(async (req, res) => {
-//   const { body } = req.body;
-
-//   const laugh = db.Laugh.build({ body });
-
-//   const validateErrors = validationResult(req);
-
-//   if (validateErrors.isEmpty()) {
-//     await laugh.save(() => {
-//       res.redirect('/')});
-//   } else {
-//     const errors = validateErrors.array().map((error) => {
-//       return error.msg
-//     })
-//     console.log(errors)
-//     res.render('laughs', {
-//       title: 'Add a Laugh',
-//       body,
-//       errors,
-//       csrfToken: req.csrfToken(),
-//     });
-//   };
-// }))
 
 module.exports = router;
