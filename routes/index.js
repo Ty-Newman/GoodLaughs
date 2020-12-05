@@ -1,24 +1,24 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const { csrfProtection, asyncHandler, loginUserCheck } = require('../utils');
 const db = require('../db/models');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+// router.get('/', function(req, res, next) {
 
-  if (req.session.user) {
-    username = req.session.user.username;
-  }
+//   if (req.session.user) {
+//     username = req.session.user.username;
+//   }
 
-  res.render('index', {
-    title: 'GoodLaughs',
-    username,
-  });
-});
+//   res.render('index', {
+//     title: 'GoodLaughs',
+//     username,
+//   });
+// });
 
 
 
-router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => {
+router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
 
   loginUserCheck(req, res, next);
 
@@ -70,7 +70,7 @@ router.get('/laughfeed', csrfProtection, asyncHandler(async (req, res, next) => 
     laugh.review = review;
   }
 
-  res.render('laughfeed', {
+  res.render('index', {
     title: 'Laughs',
     csrfToken: req.csrfToken(),
     laughs

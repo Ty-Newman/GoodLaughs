@@ -2,6 +2,7 @@ extends layout
 
 append head
   //- add page specific styles by appending to the head
+  link(rel='stylesheet' href='/stylesheets/laughfeed.css')
   link(rel="stylesheet" href="/stylesheets/index.css")
   //- add page specific js
   script(src="/javascripts/index.js" type="module" defer)
@@ -22,3 +23,25 @@ block content
       a(href="/laughfeed") Laughfeed
     #feedPage
       h2 LaughFeed
+  div(id='wrapper')
+    each laugh in laughs
+      div(id='content')
+        h2(id='user-name')= laugh.User.username
+        p(id='body')= laugh.body
+        input(type="checkbox" id="bows")
+        div(class="rate")
+          input(type="radio" id="star5" name="rate" value="5")
+          label(for="star5" title="text") 5 stars
+          input(type="radio" id="star4" name="rate" value="4")
+          label(for="star4" title="text") 4 stars
+          input(type="radio" id="star3" name="rate" value="3")
+          label(for="star3" title="text") 3 stars
+          input(type="radio" id="star2" name="rate" value="2")
+          label(for="star2" title="text") 2 stars
+          input(type="radio" id="star1" name="rate" value="1")
+          label(for="star1" title="text") 1 star
+        div
+      div(id='review-wrapper')
+          a(id='write-review' href='#') Write a Review
+          ul
+            li= laugh.review
