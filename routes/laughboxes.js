@@ -14,8 +14,6 @@ const laughboxNotFoundError = (id) => {
   err.status = 404;
   return err;
 }
-
-// Laughbox landing page
 router.get('/', csrfProtection, (req, res) => {
   // const laughbox = db.Laughbox.build();
   const errors = [];
@@ -27,16 +25,43 @@ router.get('/', csrfProtection, (req, res) => {
       errors,
     })
   }
-  // res.render('laughboxes', {
-  //   title: 'Your Laughboxes',
-  //   csrfToken: req.csrfToken(),
-  // })
-  res.send('testing landing page for logged in user')
+    res.render('laughboxes', {
+    title: 'Your Laughboxes',
+    csrfToken: req.csrfToken(),
+  })
 })
+
+// Laughbox landing page
+router.get('/', csrfProtection, asyncHandler(async (req, res) => {
+  const laughboxes = await db.LaughBox.findAll({ order: [['name', 'ASC']] })
+  res.render('laughboxes', {
+    title: 'LaughBoxes',
+    laughboxes,
+  });
+}));
+
+router.get("/", csrfProtection, (req, res) => {
+  res.render("laughboxes", {
+    body: '',
+    csrfToken: req.csrfToken(),
+  });
+});
 
 // Create new laughbox
 router.post('/', csrfProtection, asyncHandler(async (req, res) => {
-  res.send('create new laughbox')
+  const { name } = req.body;
+
+  const laughbox = db.LaughBox.build({
+    name: '',
+  });
+  await laughbox.save();
+    res.render('laughboxes', {
+      title: 'Add Laughbox',
+      name,
+      error: err,
+      csrfToken: req.csrfToken(),
+    });
+  res.redirect('/');
 }))
 
 // Retrieve a specific laughbox

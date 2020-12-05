@@ -1,0 +1,33 @@
+table {
+    width: 100%;
+}
+
+table, th, td {
+    border: 3px solid #333333;
+}
+
+.addLaughBox {
+    margin-top: 15px;
+}
+
+.addLaughBox > label, input {
+    height: 40px;
+    width: 300px;
+}
+
+.addLaughBox > label {
+    margin-right: 5px;
+}
+
+.addButton {
+    background-color: #333333;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #ffffff;
+    border: none;
+    text-decoration: none;
+    margin-left: 5px;
+    padding: 8px 16px;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    border-radius: 2px;
+}

@@ -1,0 +1,19 @@
+extends layout
+append head
+  link(rel="stylesheet", href="/stylesheets/login.css")
+  link(rel="stylesheet", href="/stylesheets/laughs.css")
+
+block content
+  if errors.length
+    br
+    each error in errors
+        div(id='errors')= error
+  br
+  form(action='/reviews' method='POST')
+    ul(class='flex-outer')
+      input(type='hidden' name='_csrf' value=csrfToken)
+      li
+        label Add a review...
+        textarea(name='reviewBody' placeholder="What are you thinking!?")
+      li
+        button(type='submit' name='submit' id='submit' value='Laughs') Submit
