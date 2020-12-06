@@ -88,21 +88,31 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
 router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
-  console.log(req.session)
-  const userId = req.session.user.id;
-  const userIdInt = parseInt(userId);
-  const rating = await db.Rating.findOne({
+  const laughUserId = laugh.userId;
+  const url = '/laughs' + req.url;
+  const errors = '';
+
+  let userIdInt = '';
+  if (req.session.user.id == laughUserId) {
+    userIdInt = parseInt(laughUserId);
+  } else {
+    userIdInt = parseInt(req.session.user.id);
+  }
+
+  const user = await db.User.findOne({
+    where: { id: userIdInt }
+  });
+
+  let rating = await db.Rating.findOne({
     where: {
       [Op.and] : [
         { userId: userIdInt },
         { laughId }
       ]
-    },
-    include: [{
-      model: User
-    }]
+    }
   });
-  const review = await db.Review.findOne(
+
+  let review = await db.Review.findOne(
     {
       where: {
         [Op.and] : [
@@ -112,7 +122,13 @@ router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
       }
     }
   );
-  res.render('laugh', { laugh, rating, review });
+
+  pugObject = { laugh, user, rating, review, url, errors }
+  if (req.session.user.id == laughUserId) {
+    res.render('laugh', pugObject);
+  } else {
+    res.render('reviews', pugObject);
+  }
 }))
 
 // Update a specific laugh
@@ -122,9 +138,38 @@ router.put('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(asy
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
 
-  if (laugh) {
-    await laugh.update({ body: req.body.body })
-  } else {
+  const laughUserId = parseInt(laugh.userId);
+  const loggedInUserId = parseInt(req.session.user.id);
+
+  const review = await db.Review.findOne({
+    where: {
+      [Op.and] : [
+        { userId: loggedInUserId },
+        { laughId }
+      ]
+    }
+  });
+
+  const rating = await db.Rating.findOne({
+    where: {
+      [Op.and] : [
+        { userId: loggedInUserId },
+        { laughId }
+      ]
+    }
+  });
+  
+  const { laughBody, bows, lols, reviewBody } = req.body
+  if (laugh && laughUserId === loggedInUserId) {
+    await laugh.update({ laughBody });
+    await rating.update({ bows, lols });
+    await review.update({ reviewBody });
+
+  } else if (laugh) {
+    await review.update({ reviewBody });
+    await rating.update({ bows, lols });
+  }
+  else {
     next(laughNotFoundError(laughId));
   }
 }))
@@ -133,6 +178,7 @@ router.put('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(asy
 router.delete('/:id(\\d+)', asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
+  console.log('hi')
 
   if (laugh) {
     await laugh.destroy();
@@ -140,6 +186,125 @@ router.delete('/:id(\\d+)', asyncHandler(async (req, res, next) => {
   } else {
     next(laughNotFoundError(taskId));
   }
+}))
+
+// Retrieve a specific laugh if the logged in user did not make it
+router.get('/:id(\\d+)/reviews', asyncHandler(async (req, res, next) => {
+  const laughId = parseInt(req.params.id, 10);
+  const laugh = await db.Laugh.findByPk(laughId);
+  const laughUserId = laugh.userId;
+  const url = '/laughs' + req.url;
+  const errors = '';
+
+  let userIdInt = '';
+  if (req.session.user.id == laughUserId) {
+    userIdInt = parseInt(laughUserId);
+  } else {
+    userIdInt = parseInt(req.session.user.id);
+  }
+  
+  const laughCreatorUser = await db.User.findOne({
+    where: { id: laughUserId }
+  });
+  const user = laughCreatorUser;
+
+  let reviews = await db.Review.findAll({
+    where: { laughId },
+    include: db.User
+  });
+  let noReviews = {};
+
+  if (reviews.length === 0) {
+    noReviews = 
+      { user: 
+        { 
+          username: laughCreatorUser.username 
+        },
+        laugh: 
+        { 
+          body: laugh.body 
+        }
+      };
+  }
+
+  // let rating = await db.Rating.findOne({
+  //   where: {
+  //     [Op.and] : [
+  //       { userId: userIdInt },
+  //       { laughId }
+  //     ]
+  //   }
+  // });
+
+  // let review = await db.Review.findOne(
+  //   {
+  //     where: {
+  //       [Op.and] : [
+  //         { userId: userIdInt },
+  //         { laughId }
+  //       ]
+  //     }
+  //   }
+  // );
+
+  //   if (!reviews) {
+  //   const laughCreatorUsername = await db.User.findOne({
+  //     where: { id: laughUserId }
+  //   });
+  //   reviews = [
+  //     { user: 
+  //       { username: laughCreatorUsername }
+  //     },
+  //     { laugh: 
+  //       { body: laugh.body }
+  //     }
+  //   ];
+  // }
+
+  console.log(noReviews)
+  pugObject = { laugh, reviews, noReviews, user, url, errors }
+  res.render('reviews', pugObject);
+}))
+
+router.post('/:id(\\d+)/reviews', asyncHandler(async (req, res, next) => {
+  const laughId = parseInt(req.params.id, 10);
+  const laugh = await db.Laugh.findByPk(laughId);
+  const laughUserId = parseInt(laugh.userId);
+  const userIdInt = parseInt(req.session.user.id);
+  const { reviewBody } = req.body;
+  const url = '/laughs' + req.url;
+  const errors = '';
+
+  let review = await db.Review.findOne(
+    {
+      where: {
+        [Op.and] : [
+          { userId: userIdInt },
+          { laughId }
+        ]
+      }
+    }
+  );
+
+  if (review) {
+    review.body = reviewBody;
+    await review.save();
+  } else {
+    console.log(reviewBody, req.session.user.id, req.params.id)
+    await db.Review.create({ body: reviewBody, userId: req.session.user.id, laughId: req.params.id });
+  }
+
+  let reviews = await db.Review.findAll({
+    where: { laughId },
+    include: db.User
+  });
+
+  const laughCreatorUser = await db.User.findOne({
+    where: { id: laughUserId }
+  });
+  const user = laughCreatorUser;
+  pugObject = { laugh, reviews, user, url, errors }
+  res.render('reviews', pugObject);
 }))
 
 module.exports = router;

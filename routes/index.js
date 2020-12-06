@@ -21,10 +21,8 @@ router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
   loginUserCheck(req, res, next);
   const loggedInUserId = req.session.user.id;
   const laughs = await db.Laugh.findAll({
-    where: {
-      userId: loggedInUserId
-    },
-    include: db.User
+    include: db.User,
+    order: [['updatedAt', 'DESC']]
   });
 
   for (let i = 0; i < laughs.length; i ++) {
@@ -47,7 +45,8 @@ router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
     const reviews = await db.Review.findAll({
       where: {
         laughId: laugh.id
-      }
+      },
+      include: db.User
     })
 
     // if we add multiple reviews
@@ -63,7 +62,9 @@ router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
     if (reviews[0]) {
       review = reviews[0].body;
     }
+
     laugh.review = review;
+    laugh.reviews = reviews;
   }
 
   res.render('index', {
