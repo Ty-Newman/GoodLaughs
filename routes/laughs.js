@@ -88,19 +88,20 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
 router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
+  console.log(req.session)
   const userId = req.session.user.id;
   const userIdInt = parseInt(userId);
-  const rating = await db.Rating.findOne(
-    {
-      where: {
-        [Op.and] : [
-          { userId: userIdInt },
-          { laughId }
-        ]
-      },
-      include: User
-    }
-  );
+  const rating = await db.Rating.findOne({
+    where: {
+      [Op.and] : [
+        { userId: userIdInt },
+        { laughId }
+      ]
+    },
+    include: [{
+      model: User
+    }]
+  });
   const review = await db.Review.findOne(
     {
       where: {
