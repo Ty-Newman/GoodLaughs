@@ -1,3 +1,6 @@
+append head
+    script(src="/routes/users.js" type="module")
+
 div
 #header
     div
@@ -7,13 +10,17 @@ div
     #nav-buttons
         div
             a(href="/") Home
-            a(href="/laughboxes") LaughBox
+            a(href="/laughboxes") MyLaughBoxes
             a(href="/laughs") Add-a-Laugh
     div
     #searchBar
         input(type='text' name='search' placeholder='Search Laughs')
     div
     #buttons
-        div
+        if 5 > 4
+            span(class='helloUser') Welcome !
+            form(class='logoutUser' action='/users/logout' method='post')
+                button(class='logoutButton' type='submit') logout
+        else
             a(href="/users/login") login
             a(href="/users/signup") signup

@@ -37,6 +37,19 @@ img{
     margin-right: 4px;
 }
 
+.logoutButton {
+    background-color: #333333;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #ffffff;
+    border: none;
+    text-decoration: none;
+    margin-left: 5px;
+    padding: 8px 16px;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    border-radius: 2px;
+}
+
 
 #nav-buttons {
     grid-column: 2/4;
