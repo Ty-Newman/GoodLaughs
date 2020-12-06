@@ -1,5 +1,10 @@
 <!-- README HEADER -->
 <br />
+<p align="center">
+  <a href="https://good-laughs.herokuapp.com/images/logo.png">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
+  
   <h3 align="center">GoodLaughs</h3>
 
   <p align="center">
