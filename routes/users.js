@@ -172,8 +172,12 @@ router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, a
 }));
 
 router.post('/logout', (req, res) => {
-  logoutUser(req, res);
-  res.redirect('/');
+  //logoutUser(req, res);
+  req.session.user = null;
+  req.session.save(() => {
+    res.redirect('/');
+
+  })
 });
 
 module.exports = router;
