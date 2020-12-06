@@ -125,7 +125,7 @@ router.put('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(asy
   if (laugh) {
     await laugh.update({ body: req.body.body })
   } else {
-    next(laughNotFoundError(taskId));
+    next(laughNotFoundError(laughId));
   }
 }))
 

@@ -1,0 +1,22 @@
+extends layout.pug
+
+block content
+    h3= laughbox.name
+        div(class='laughboxes')
+        table
+            thead(class='laughboxes-list')
+            tr
+                th(scope='col') Username
+                th(scope='col') Laugh
+                th(scope='col') Bows
+                th(scope='col') LOLs
+                th(scope='col') Reviews
+                tbody
+                    each laugh in laughs
+                        tr
+                            td= laugh.User.username
+                            td= laugh.body
+                            td= laugh.bows
+                            td= laugh.lols
+                            td= (laugh.review.length || 0)
+                            td: a(class='backButton' href=`/laughboxes` role='button') Back to LaughBoxes
