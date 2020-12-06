@@ -8,7 +8,7 @@
   <h3 align="center">GoodLaughs</h3>
 
   <p align="center">
-    Authors: Dan Chin, Ressar Newchin, Ty Newman, Derek Nungesser, Tychin Nungread, and Chris Read
+    Developers: Dan Chin, Ty Newman, Derek Nungesser, and Chris Read
     <br />
     <a href="https://github.com/Ty-Newman/GoodLaughs/wiki"><strong>Explore the docs... »</strong></a>
     <br />
