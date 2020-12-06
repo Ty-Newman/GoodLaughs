@@ -8,7 +8,7 @@
     <a href="https://github.com/Ty-Newman/GoodLaughs/wiki"><strong>Explore the docs... »</strong></a>
     <br />
     <br />
-    .
+    ·
     <a href="https://good-laughs.herokuapp.com/">View Demo</a>
     ·
 </p>
