@@ -92,6 +92,9 @@ This app was created for the first group project as part of the AppAcademy curri
 ## Code-Snippets
 
 Below are a few code snippets that the deveopers feel demonstrate strong skills and knowledge of what has been learned up to this point.
+
+
+1. The 5 star rating
 ```
   div(class="rate")
             input(type="radio" id="star5" name="rate" value="5")
