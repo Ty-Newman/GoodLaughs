@@ -56,12 +56,10 @@ In the future, we want our users to be able to use GoodLaughs as a social media 
 
 ### Technologies Used
 
-This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-* [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
-* [Laravel](https://laravel.com)
+Below are a few examples of technologies we used in order to complete our project.
 
-
+* [Heroku](https://www.heroku.com/)
+* [PugJS](https://pugjs.org/api/getting-started.html)
 
 <!-- Features -->
 ## Features
