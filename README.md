@@ -1,8 +1,8 @@
 <!-- README HEADER -->
 <br />
 <p align="center">
-  <a href="https://good-laughs.herokuapp.com/images/logo.png" width="80" height="80">
-    <img src="https://good-laughs.herokuapp.com/images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://good-laughs.herokuapp.com/images/logo.png" width="190" height="100">
+    <img src="https://good-laughs.herokuapp.com/images/logo.png" alt="Logo" width="190" height="100">
   </a>
   
   <h3 align="center">GoodLaughs</h3>
