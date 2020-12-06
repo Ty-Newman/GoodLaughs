@@ -42,8 +42,9 @@ block content
           label(for="star1" title="text") 1 star
         div
       div(id='review-wrapper')
-          a(id='write-review' href='/laughs/' + laugh.id + '/reviews') Write a Review
-          a(id='edit-laugh' href='/laughs/' + laugh.id + '/reviews') Edit this Laugh
+          if laugh.createdLaugh
+            a(id='write-review' href='/laughs/' + laugh.id) Edit this Laugh
+          a(id='edit-laugh' href='/laughs/' + laugh.id + '/reviews') Write a Review
           if laugh.reviews
             each review in laugh.reviews
               ul

@@ -19,7 +19,7 @@ const db = require('../db/models');
 router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
 
   loginUserCheck(req, res, next);
-  const loggedInUserId = req.session.user.id;
+  const loggedInUserId = parseInt(req.session.user.id);
   const laughs = await db.Laugh.findAll({
     include: db.User,
     order: [['updatedAt', 'DESC']]
@@ -62,9 +62,14 @@ router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
     if (reviews[0]) {
       review = reviews[0].body;
     }
-
     laugh.review = review;
     laugh.reviews = reviews;
+
+    let createdLaugh = false;
+    if (loggedInUserId === parseInt(laugh.User.id)) {
+      createdLaugh = true;
+    }
+    laugh.createdLaugh = createdLaugh;
   }
 
   res.render('index', {

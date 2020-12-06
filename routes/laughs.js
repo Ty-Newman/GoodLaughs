@@ -92,6 +92,11 @@ router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
   const url = '/laughs' + req.url;
   const errors = '';
 
+  if (parseInt(laughUserId) !== parseInt(req.session.user.id)) {
+    const err = new Error('This user cannot edit this laugh. Please login as the user who created this laugh or visit another laugh. Thank you very much')
+    next(err);
+  }
+
   let userIdInt = '';
   if (req.session.user.id == laughUserId) {
     userIdInt = parseInt(laughUserId);
@@ -135,11 +140,15 @@ router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
 router.put('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(async (req, res, next) => {
   loginUserCheck(req, res, next);
 
+  const url = '/laughs' + req.url;
+
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
 
   const laughUserId = parseInt(laugh.userId);
   const loggedInUserId = parseInt(req.session.user.id);
+
+  const errors = '';
 
   const review = await db.Review.findOne({
     where: {
@@ -161,17 +170,29 @@ router.put('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(asy
   
   const { laughBody, bows, lols, reviewBody } = req.body
   if (laugh && laughUserId === loggedInUserId) {
-    await laugh.update({ laughBody });
-    await rating.update({ bows, lols });
-    await review.update({ reviewBody });
-
+    laugh.body = laughBody;
+    rating.bows = bows;
+    rating.lols = lols;
+    review.body = reviewBody;
+    await laugh.save();
+    await rating.save();
+    await review.save();
   } else if (laugh) {
-    await review.update({ reviewBody });
-    await rating.update({ bows, lols });
+    rating.bows = bows;
+    rating.lols = lols;
+    review.body = reviewBody;
+    await rating.save();
+    await review.save();
   }
   else {
     next(laughNotFoundError(laughId));
   }
+  
+  const user = await db.User.findOne({
+    where: { id: loggedInUserId }
+  });
+  pugObject = { laugh, user, rating, review, url, errors }
+  res.render('laugh', pugObject);
 }))
 
 // Delete a specific laugh
