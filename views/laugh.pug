@@ -27,7 +27,7 @@ block content
         each error in errors
             div(id='errors')= error
     br
-    form(action=url method='PUT')
+    form(action=url+'/update' method='POST')
         ul(class='flex-outer')
         input(type='hidden' name='_csrf' value=csrfToken)
         li
@@ -44,4 +44,4 @@ block content
             textarea(name='reviewBody' placeholder='')
         li
             button(type='submit' name='submit' id='submit' value='Laughs') Submit
-    a(href=url, id='deleteLaugh' value='delete') Delete This Laugh
+    a(href=url+'/delete', id='deleteLaugh' value='delete') Delete This Laugh

@@ -73,7 +73,7 @@ router.post('/:id(\\d+)', csrfProtection, validateReview, handleValidationErrors
 }))
 
 // Delete a review
-router.delete('/:id(\\d+)', csrfProtection, handleValidationErrors, asyncHandler(async (req, res, next) => {
+router.post('/:id(\\d+)/delete', csrfProtection, handleValidationErrors, asyncHandler(async (req, res, next) => {
   const reviewId = parseInt(req.params.id, 10);
   const review = await db.Review.findByPk(reviewId);
 
