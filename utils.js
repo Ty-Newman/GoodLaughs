@@ -20,7 +20,7 @@ const handleValidationErrors = (req, res, next) => {
 
     res.render(endOfUrl, {
       title: err.title,
-      csrfToken: req.csrfToken(),
+      // csrfToken: req.csrfToken(),
       errors: err.errors
     });
 

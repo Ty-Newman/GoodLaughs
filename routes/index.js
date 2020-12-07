@@ -16,17 +16,12 @@ const db = require('../db/models');
 //   });
 // });
 
-
-
 router.get('/', loginUserCheck, csrfProtection, asyncHandler(async (req, res, next) => {
 
-  // loginUserCheck(req, res, next);
-  const loggedInUserId = req.session.user.id;
+  const loggedInUserId = parseInt(req.session.user.id);
   const laughs = await db.Laugh.findAll({
-    where: {
-      userId: loggedInUserId
-    },
-    include: db.User
+    include: db.User,
+    order: [['updatedAt', 'DESC']]
   });
 
   for (let i = 0; i < laughs.length; i ++) {
@@ -49,7 +44,8 @@ router.get('/', loginUserCheck, csrfProtection, asyncHandler(async (req, res, ne
     const reviews = await db.Review.findAll({
       where: {
         laughId: laugh.id
-      }
+      },
+      include: db.User
     })
 
     // if we add multiple reviews
@@ -66,6 +62,13 @@ router.get('/', loginUserCheck, csrfProtection, asyncHandler(async (req, res, ne
       review = reviews[0].body;
     }
     laugh.review = review;
+    laugh.reviews = reviews;
+
+    let createdLaugh = false;
+    if (loggedInUserId === parseInt(laugh.User.id)) {
+      createdLaugh = true;
+    }
+    laugh.createdLaugh = createdLaugh;
   }
 
   res.render('index', {

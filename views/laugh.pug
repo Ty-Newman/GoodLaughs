@@ -1,0 +1,47 @@
+extends laughs.pug
+
+block content
+    table
+        thead: tr
+            th Username
+            th Laugh
+            th Posted
+            th Updated
+            th Bows
+            th LOLs
+            th Review
+            tbody
+                tr
+                td= user.username
+                td= laugh.body
+                td= laugh.createdAt
+                td= laugh.updatedAt
+                if rating
+                    td= rating.bows
+                    td= rating.lols
+                if review
+                    td= review.body
+    br
+    if errors.length
+        br
+        each error in errors
+            div(id='errors')= error
+    br
+    form(action=url+'/update' method='POST')
+        ul(class='flex-outer')
+            input(type='hidden' name='_csrf' value=csrfToken)
+            li
+                label Edit this laugh...
+                textarea(name='laughBody' placeholder=laugh.body)
+            li
+                label Edit Bow (for those hahahahaahas!)
+                input(type='checkbox' name='bows')
+            li
+                label Edit Lols 1-5
+                input(type='number' name='lols' placeholder='5')
+            li
+                label Edit your review...
+                textarea(name='reviewBody' placeholder='')
+            li
+                button(type='submit' name='submit' id='submit' value='Laughs') Submit
+    a(href=url+'/delete', id='deleteLaugh' value='delete') Delete This Laugh
