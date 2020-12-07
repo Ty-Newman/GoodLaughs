@@ -51,7 +51,7 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
     const user = await db.User.findOne({ where: { username } });
     if (!user) {
       errors.push("Invalid login ID. Please try again.")
-      res.render('login', {
+      return res.render('login', {
         title: 'Login',
         csrfToken: req.csrfToken(),
         errors,
@@ -66,7 +66,7 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
         csrfToken: req.csrfToken()
       };
       req.session.save();
-      res.redirect('/');
+      return res.redirect('/');
     } else {
       errors.push("Invalid password. Please try again.");
     }
@@ -155,12 +155,12 @@ router.post('/signup', csrfProtection, validateSignup, handleValidationErrors, a
         username: user.username,
         id: user.id,
       };
-      req.session.save(err => {
+      return req.session.save(err => {
         if (err) return next(err);
         res.redirect('/');
       });
-      errors.push('Signup failed for the provided username and email');
     }
+    errors.push('Signup failed for the provided username and email');
   } else {
     errors = validatorErrors.array().map((error) => error.msg)
   }
