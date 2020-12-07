@@ -48,7 +48,7 @@ router.get("/", csrfProtection, (req, res) => {
 });
 
 // Create new laughbox
-router.post('/', csrfProtection, asyncHandler(async (req, res) => {
+router.post('/', asyncHandler(async (req, res) => {
   const { name } = req.body;
 
   const laughbox = db.LaughBox.build({
