@@ -17,10 +17,10 @@ const handleValidationErrors = (req, res, next) => {
     const err = Error("Errors");
     err.errors = errors;
     err.status = 400;
-    
+
     res.render(endOfUrl, {
       title: err.title,
-      csrfToken: req.csrfToken(),
+      // csrfToken: req.csrfToken(),
       errors: err.errors
     });
 
