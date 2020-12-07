@@ -28,7 +28,7 @@ const reviewNotFoundError = (id) => {
   return err;
 }
 
-router.get('/:id(\\d+)', csrfProtection, asyncHandler(async (req, res, next) => {
+router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
 

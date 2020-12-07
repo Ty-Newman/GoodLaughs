@@ -29,19 +29,19 @@ block content
     br
     form(action=url+'/update' method='POST')
         ul(class='flex-outer')
-            input(type='hidden' name='_csrf' value=csrfToken)
-            li
-                label Edit this laugh...
-                textarea(name='laughBody' placeholder=laugh.body)
-            li
-                label Edit Bow (for those hahahahaahas!)
-                input(type='checkbox' name='bows')
-            li
-                label Edit Lols 1-5
-                input(type='number' name='lols' placeholder='5')
-            li
-                label Edit your review...
-                textarea(name='reviewBody' placeholder='')
-            li
-                button(type='submit' name='submit' id='submit' value='Laughs') Submit
+        input(type='hidden' name='_csrf' value=csrfToken)
+        li
+            label Edit this laugh...
+            textarea(name='laughBody' placeholder=laugh.body)
+        //- li
+        //-     label Edit Bow (for those hahahahaahas!)
+        //-     input(type='radio' name='bows')
+        //- li
+        //-     label Edit Lols 1-5
+        //-     input(type='number' name='lols' placeholder='5')
+        //- li
+        //-     label Edit your review...
+        //-     textarea(name='reviewBody' placeholder='')
+        li
+            button(type='submit' name='submit' id='submit' value='Laughs') Submit
     a(href=url+'/delete', id='deleteLaugh' value='delete') Delete This Laugh

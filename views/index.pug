@@ -13,14 +13,14 @@ block content
     div
     #sideBar
       h1 GoodLaughs
-      p Welcome to GoodLaughs!
+      p Welcome to GoodLaughs #{user.username}!
       a(href="/users/login") Log In
       div
       a(href="/users/signup") Don't have an account?
-      div
-      a(href="/laughs") Laughs
-      div
-      a(href="/laughfeed") Laughfeed
+      //- div
+      //- a(href="/laughs") Laughs
+      //- div
+      //- a(href="/laughfeed") Laughfeed
     #feedPage
   div(id='wrapper')
     each laugh in laughs

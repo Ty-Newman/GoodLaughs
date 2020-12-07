@@ -19,12 +19,15 @@ block content
           th(scope='col') Date Created
           th(scope='col') # of Laughs
       tbody
-        if undefined
+        if laughboxes != undefined
           each laughbox in laughboxes
             tr
               td= laughbox.name
               td= laughbox.createdAt
-              td= (laughbox.laughBoxLaughs.length || 0)
+              if !laughbox.LaughBoxLaughs
+                td= 0
+              else
+                td= (laughbox.LaughBoxLaughs.length)
               td: a(class=`detailsButton' href='/laughboxes/${laughbox.id}`) Open
         else
           p No laughboxes :(
