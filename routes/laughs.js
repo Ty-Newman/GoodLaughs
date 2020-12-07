@@ -15,6 +15,12 @@ const validateLaugh = [
     .withMessage("Please provide a number between 1 and 5.")
 ]
 
+const validateEditLaugh = [
+    // check('laughBody')
+    // .exists({ checkFalsy: true })
+    // .withMessage("Please provide a joke."),
+];
+
 const laughNotFoundError = (id) => {
   const err = Error(`Laugh you referred could not be found.`)
   err.title = "Laugh not found";
@@ -24,7 +30,7 @@ const laughNotFoundError = (id) => {
 
 router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
 
-  loginUserCheck(req, res, next);
+  // loginUserCheck(req, res, next);
 
   res.render('laughs', {
     title: 'Add a Laugh',
@@ -52,7 +58,7 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
           { body: laughBody }
         ]
       },
-      include: User
+      include: db.User
     });
 
     const laughIdInt = parseInt(savedLaugh.id);
@@ -85,7 +91,7 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
 }))
 
 // Retrieve a specific laugh
-router.get('/:id(\\d+)', csrfProtection, asyncHandler(async (req, res, next) => {
+router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
   const laughUserId = laugh.userId;
@@ -137,8 +143,10 @@ router.get('/:id(\\d+)', csrfProtection, asyncHandler(async (req, res, next) => 
 }))
 
 // Update a specific laugh
-router.post('/:id(\\d+)/update', validateLaugh, handleValidationErrors, asyncHandler(async (req, res, next) => {
+router.post('/:id(\\d+)/update', validateEditLaugh, handleValidationErrors, asyncHandler(async (req, res, next) => {
   // loginUserCheck(req, res, next);
+
+  console.log('here')
 
   const url = '/laughs' + req.url;
 
@@ -148,43 +156,43 @@ router.post('/:id(\\d+)/update', validateLaugh, handleValidationErrors, asyncHan
   const laughUserId = parseInt(laugh.userId);
   const loggedInUserId = parseInt(req.session.user.id);
 
-  const errors = '';
+  // const errors = '';
 
-  const review = await db.Review.findOne({
-    where: {
-      [Op.and] : [
-        { userId: loggedInUserId },
-        { laughId }
-      ]
-    }
-  });
+  // const review = await db.Review.findOne({
+  //   where: {
+  //     [Op.and] : [
+  //       { userId: loggedInUserId },
+  //       { laughId }
+  //     ]
+  //   }
+  // });
 
-  const rating = await db.Rating.findOne({
-    where: {
-      [Op.and] : [
-        { userId: loggedInUserId },
-        { laughId }
-      ]
-    }
-  });
+  // const rating = await db.Rating.findOne({
+  //   where: {
+  //     [Op.and] : [
+  //       { userId: loggedInUserId },
+  //       { laughId }
+  //     ]
+  //   }
+  // });
   
   const { laughBody, bows, lols, reviewBody } = req.body
-    console.log(url)
   if (laugh && laughUserId === loggedInUserId) {
     laugh.body = laughBody;
-    rating.bows = bows;
-    rating.lols = lols;
-    review.body = reviewBody;
+    // rating.bows = bows;
+    // rating.lols = lols;
+    // review.body = reviewBody;
     await laugh.save();
-    await rating.save();
-    await review.save();
-  } else if (laugh) {
-    rating.bows = bows;
-    rating.lols = lols;
-    review.body = reviewBody;
-    await rating.save();
-    await review.save();
-  }
+    // await rating.save();
+    // await review.save();
+  } 
+  // else if (laugh) {
+  //   rating.bows = bows;
+  //   rating.lols = lols;
+  //   review.body = reviewBody;
+  //   await rating.save();
+  //   await review.save();
+  // }
   else {
     next(laughNotFoundError(laughId));
   }
@@ -194,6 +202,7 @@ router.post('/:id(\\d+)/update', validateLaugh, handleValidationErrors, asyncHan
   // });
   // pugObject = { laugh, user, rating, review, url, errors }
   let nextUrl = url.split('/update')[0];
+  console.log(nextUrl)
   res.redirect(nextUrl);
 }))
 
@@ -203,7 +212,7 @@ router.post('/:id(\\d+)/update', validateLaugh, handleValidationErrors, asyncHan
 // }))
 
 // Delete a specific laugh
-router.get('/:id(\\d+)/delete', csrfProtection, asyncHandler(async (req, res, next) => {
+router.get('/:id(\\d+)/delete', asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
   const loggedInUserId = parseInt(req.session.user.id);
@@ -237,7 +246,7 @@ router.get('/:id(\\d+)/delete', csrfProtection, asyncHandler(async (req, res, ne
 }))
 
 // Retrieve a specific laughs reviews
-router.get('/:id(\\d+)/reviews', csrfProtection, asyncHandler(async (req, res, next) => {
+router.get('/:id(\\d+)/reviews', asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
   const laughUserId = laugh.userId;
@@ -290,7 +299,7 @@ router.get('/:id(\\d+)/reviews', csrfProtection, asyncHandler(async (req, res, n
   res.render('reviews', pugObject);
 }))
 
-router.post('/:id(\\d+)/reviews', csrfProtection, asyncHandler(async (req, res, next) => {
+router.post('/:id(\\d+)/reviews',  asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
   const laughUserId = parseInt(laugh.userId);
@@ -332,7 +341,7 @@ router.post('/:id(\\d+)/reviews', csrfProtection, asyncHandler(async (req, res, 
 }))
 
 // Delete a review
-router.get('/:id(\\d+)/reviews/delete', csrfProtection, handleValidationErrors, asyncHandler(async (req, res, next) => {
+router.get('/:id(\\d+)/reviews/delete', handleValidationErrors, asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const userId = parseInt(req.session.user.id);
 
