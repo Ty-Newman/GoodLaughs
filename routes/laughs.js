@@ -85,7 +85,7 @@ router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHan
 }))
 
 // Retrieve a specific laugh
-router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
+router.get('/:id(\\d+)', csrfProtection, asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
   const laughUserId = laugh.userId;
@@ -137,8 +137,8 @@ router.get('/:id(\\d+)', asyncHandler(async (req, res, next) => {
 }))
 
 // Update a specific laugh
-router.put('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(async (req, res, next) => {
-  loginUserCheck(req, res, next);
+router.post('/:id(\\d+)/update', validateLaugh, handleValidationErrors, asyncHandler(async (req, res, next) => {
+  // loginUserCheck(req, res, next);
 
   const url = '/laughs' + req.url;
 
@@ -169,6 +169,7 @@ router.put('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(asy
   });
   
   const { laughBody, bows, lols, reviewBody } = req.body
+    console.log(url)
   if (laugh && laughUserId === loggedInUserId) {
     laugh.body = laughBody;
     rating.bows = bows;
@@ -188,29 +189,55 @@ router.put('/:id(\\d+)', validateLaugh, handleValidationErrors, asyncHandler(asy
     next(laughNotFoundError(laughId));
   }
   
-  const user = await db.User.findOne({
-    where: { id: loggedInUserId }
-  });
-  pugObject = { laugh, user, rating, review, url, errors }
-  res.render('laugh', pugObject);
+  // const user = await db.User.findOne({
+  //   where: { id: loggedInUserId }
+  // });
+  // pugObject = { laugh, user, rating, review, url, errors }
+  let nextUrl = url.split('/update')[0];
+  res.redirect(nextUrl);
 }))
 
+// router.get('/:id(\\d+)/update', asyncHandler(async (req, res, next) => {
+//   const id = req.params.id
+//   res.redirect('laughs/' + id);
+// }))
+
 // Delete a specific laugh
-router.delete('/:id(\\d+)', asyncHandler(async (req, res, next) => {
+router.get('/:id(\\d+)/delete', csrfProtection, asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
-  console.log('hi')
+  const loggedInUserId = parseInt(req.session.user.id);
+
+  const reviews = await db.Review.findAll({
+    where: {
+      laughId
+    }
+  });
+
+  for (let i = 0; i < reviews.length; i++) {
+    await reviews[i].destroy();
+  }
+
+  const ratings = await db.Rating.findAll({
+    where: {
+      laughId
+    }
+  });
+
+  for (let i = 0; i < ratings.length; i++) {
+    await ratings[i].destroy();
+  }
 
   if (laugh) {
     await laugh.destroy();
-    res.status(204).end();
+    res.redirect('/');
   } else {
     next(laughNotFoundError(taskId));
   }
 }))
 
-// Retrieve a specific laugh if the logged in user did not make it
-router.get('/:id(\\d+)/reviews', asyncHandler(async (req, res, next) => {
+// Retrieve a specific laughs reviews
+router.get('/:id(\\d+)/reviews', csrfProtection, asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
   const laughUserId = laugh.userId;
@@ -248,46 +275,22 @@ router.get('/:id(\\d+)/reviews', asyncHandler(async (req, res, next) => {
       };
   }
 
-  // let rating = await db.Rating.findOne({
-  //   where: {
-  //     [Op.and] : [
-  //       { userId: userIdInt },
-  //       { laughId }
-  //     ]
-  //   }
-  // });
+  const userReview = await db.Review.findOne(
+    {
+      where: {
+        [Op.and] : [
+          { userId: parseInt(req.session.user.id) },
+          { laughId }
+        ]
+      }
+    }
+  );  
 
-  // let review = await db.Review.findOne(
-  //   {
-  //     where: {
-  //       [Op.and] : [
-  //         { userId: userIdInt },
-  //         { laughId }
-  //       ]
-  //     }
-  //   }
-  // );
-
-  //   if (!reviews) {
-  //   const laughCreatorUsername = await db.User.findOne({
-  //     where: { id: laughUserId }
-  //   });
-  //   reviews = [
-  //     { user: 
-  //       { username: laughCreatorUsername }
-  //     },
-  //     { laugh: 
-  //       { body: laugh.body }
-  //     }
-  //   ];
-  // }
-
-  console.log(noReviews)
-  pugObject = { laugh, reviews, noReviews, user, url, errors }
+  pugObject = { laugh, reviews, noReviews, userReview, user, url, errors }
   res.render('reviews', pugObject);
 }))
 
-router.post('/:id(\\d+)/reviews', asyncHandler(async (req, res, next) => {
+router.post('/:id(\\d+)/reviews', csrfProtection, asyncHandler(async (req, res, next) => {
   const laughId = parseInt(req.params.id, 10);
   const laugh = await db.Laugh.findByPk(laughId);
   const laughUserId = parseInt(laugh.userId);
@@ -325,7 +328,34 @@ router.post('/:id(\\d+)/reviews', asyncHandler(async (req, res, next) => {
   });
   const user = laughCreatorUser;
   pugObject = { laugh, reviews, user, url, errors }
-  res.render('reviews', pugObject);
+  res.redirect(url); // re-run a router route
+}))
+
+// Delete a review
+router.get('/:id(\\d+)/reviews/delete', csrfProtection, handleValidationErrors, asyncHandler(async (req, res, next) => {
+  const laughId = parseInt(req.params.id, 10);
+  const userId = parseInt(req.session.user.id);
+
+  const review = await db.Review.findOne(
+    {
+      where: {
+        [Op.and] : [
+          { userId },
+          { laughId }
+        ]
+      }
+    }
+  );
+
+  if (review) {
+    await review.destroy();
+    const url = '/laughs/' + req.params.id + '/reviews';
+    res.redirect(url);
+  } else {
+    const err = new Error('Review not found');
+    next(err);
+  }
+
 }))
 
 module.exports = router;
