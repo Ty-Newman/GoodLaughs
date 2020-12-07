@@ -42,8 +42,10 @@ router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
   res.render('laughboxes', {
     title: 'LaughBoxes',
     laughboxes,
+    body: '',
   });
 }))
+
 
 // Laughbox landing page
 // router.get('/', csrfProtection, asyncHandler(async (req, res) => {
@@ -75,6 +77,7 @@ router.post('/', asyncHandler(async (req, res) => {
   //   // csrfToken: req.csrfToken(),
   // });
   res.redirect('/laughboxes');
+
 }))
 
 // Retrieve a specific laughbox
