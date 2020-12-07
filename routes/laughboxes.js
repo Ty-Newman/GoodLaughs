@@ -37,29 +37,30 @@ router.get('/', csrfProtection, asyncHandler(async (req, res) => {
   res.render('laughboxes', {
     title: 'LaughBoxes',
     laughboxes,
+    body: '',
   });
 }));
 
-router.get("/", csrfProtection, (req, res) => {
+router.get("/", csrfProtection, asyncHandler(async (req, res) => {
   res.render("laughboxes", {
     body: '',
-    csrfToken: req.csrfToken(),
+    csrfToken: req.csrfToken()
   });
-});
+}));
 
 // Create new laughbox
 router.post('/', asyncHandler(async (req, res) => {
   const { name } = req.body;
+  const userId = req.session.user.id
 
-  const laughbox = db.LaughBox.build({
-    name: '',
+  await db.LaughBox.create({
+    name: [],
+    userId
   });
-  await laughbox.save();
     res.render('laughboxes', {
       title: 'Add Laughbox',
-      name,
-      error: err,
-      csrfToken: req.csrfToken(),
+      name: name,
+      userId
     });
   res.redirect('/');
 }))
