@@ -2,12 +2,14 @@ table {
     width: 100%;
 }
 
-table, th, td {
+table, thead, tr, th {
     border: 3px solid #333333;
+    position: inherit;
 }
 
 .addLaughBox {
     margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .addLaughBox > label, input {
