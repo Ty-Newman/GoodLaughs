@@ -6,5 +6,31 @@ form{
     display: flex;
     justify-content: center;
 }
+table{
+    border: 2px solid black ;
+    color: #F4F1EA;
+    border-collapse: collapse;
+    width: 100%;
+}
+thead{
+    background-color: grey;
+}
+tbody tr:nth-child(odd) {
+    background-color: #474747;
+    text-align: center;
+  }
 
-
+  tbody tr:nth-child(even) {
+    background-color: #2b2b2b;
+  }
+td{
+    padding: 2em;
+}
+li{
+    list-style: none;
+    padding: 1em;
+}
+/* ul{
+    display: flex;
+    justify-content: center;
+} */

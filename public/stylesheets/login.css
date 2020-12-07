@@ -15,7 +15,7 @@ h2{
     color: red;
 }
 
-.flex-outer input{
+.flex-outer input, textarea{
     border: none;
     background-color:  #b9b38a;
     padding: 5px 5px 5px 5px;
