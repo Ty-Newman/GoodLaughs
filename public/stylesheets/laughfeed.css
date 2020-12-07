@@ -49,15 +49,17 @@
 #content{
     padding: 2em;
     margin-top: 1em;
-    background-color: whitesmoke;
+    background-color: #2b2b2b;
     border: solid 2px black;
+    color: #F4F1EA;
     box-shadow: 3px 6px #777;
     border-radius: 10px 10px 0px 0px;
     border-bottom: none;
 }
 #review-wrapper{
-    background-color: lightgray;
+    background-color: #474747;
     border: solid 2px black;
+    color: #F4F1EA;
     border-top: none;
     box-shadow: 3px 6px #777;
     min-height: 100px;
@@ -81,8 +83,12 @@
 #review-wrapper li{
 text-decoration: none;
 }
+#review-wrapper a{
+    color: #eee1c3;
+    text-decoration: none;
+    padding-left: 1em;
+}
 #write-review{
     float: right;
-    padding: 0.5em;
     padding-right: 3em;
 }
