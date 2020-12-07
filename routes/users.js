@@ -63,6 +63,7 @@ router.post('/login', csrfProtection, validateLogin, handleValidationErrors, asy
       req.session.user = {
         username: user.username,
         id: user.id,
+        csrfToken: req.csrfToken()
       };
       req.session.save();
       res.redirect('/');

@@ -30,7 +30,7 @@ router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
   res.render('laughs', {
     title: 'Add a Laugh',
     body: '',
-    errors: '', 
+    errors: '',
     csrfToken: req.csrfToken(),
   });
 }));
