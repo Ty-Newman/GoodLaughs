@@ -16,9 +16,8 @@ const db = require('../db/models');
 //   });
 // });
 
-router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
+router.get('/', loginUserCheck, csrfProtection, asyncHandler(async (req, res, next) => {
 
-  loginUserCheck(req, res, next);
   const loggedInUserId = parseInt(req.session.user.id);
   const laughs = await db.Laugh.findAll({
     include: db.User,

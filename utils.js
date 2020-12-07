@@ -17,7 +17,7 @@ const handleValidationErrors = (req, res, next) => {
     const err = Error("Errors");
     err.errors = errors;
     err.status = 400;
-    
+
     res.render(endOfUrl, {
       title: err.title,
       csrfToken: req.csrfToken(),
@@ -31,10 +31,7 @@ const handleValidationErrors = (req, res, next) => {
 
 const loginUserCheck = (req, res, next) => {
   if (!req.session.user) {
-    const err = new Error('User not logged in')
-    const message = "No user logged in. Please log in at the login page, or signup if you do not have an account."
-    err.message = req.app.get('env') === 'development' ? message : {};
-    next(err);
+    return res.redirect('/users/login')
   }
 };
 
