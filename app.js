@@ -36,6 +36,15 @@ app.use(
   })
 );
 
+const checkUser = (req, res, next) => {
+  if (req.session.user) {
+    res.locals.user = req.session.user
+  }
+  next();
+}
+
+app.use(checkUser)
+
 // create Session table if it doesn't already exist
 store.sync();
 
