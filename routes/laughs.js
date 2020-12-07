@@ -22,9 +22,7 @@ const laughNotFoundError = (id) => {
   return err;
 }
 
-router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
-
-  loginUserCheck(req, res, next);
+router.get('/', loginUserCheck, csrfProtection, asyncHandler(async (req, res, next) => {
 
   res.render('laughs', {
     title: 'Add a Laugh',
@@ -34,7 +32,7 @@ router.get('/', csrfProtection, asyncHandler(async (req, res, next) => {
   });
 }));
 
-router.post('/', csrfProtection, validateLaugh, handleValidationErrors, asyncHandler(async (req, res) => {
+router.post('/', csrfProtection, validateLaugh, loginUserCheck, handleValidationErrors, asyncHandler(async (req, res) => {
   const { laughBody, bows, lols, reviewBody } = req.body;
   const userId = req.session.user.id;
   const userIdInt = parseInt(userId);
@@ -137,6 +135,7 @@ router.get('/:id(\\d+)', csrfProtection, asyncHandler(async (req, res, next) => 
 }))
 
 // Update a specific laugh
+
 router.post('/:id(\\d+)/update', validateLaugh, handleValidationErrors, asyncHandler(async (req, res, next) => {
   // loginUserCheck(req, res, next);
 
@@ -196,6 +195,7 @@ router.post('/:id(\\d+)/update', validateLaugh, handleValidationErrors, asyncHan
   let nextUrl = url.split('/update')[0];
   res.redirect(nextUrl);
 }))
+
 
 // router.get('/:id(\\d+)/update', asyncHandler(async (req, res, next) => {
 //   const id = req.params.id
