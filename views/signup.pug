@@ -25,5 +25,6 @@ block content
                 label(for='confirmPass') Confirm Password
                 input(type='password' name='confirmPass' id='confirmPass' placeholder='Confirm Password')
             li
-                a(href="/") Return
+                if user
+                    a(href="/") Return Home
                 button(type='submit' name='submit' id='submit' value='Sign-up') Submit

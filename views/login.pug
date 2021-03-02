@@ -19,5 +19,8 @@ block content
                 label(for='password') Password
                 input(type='password' name='password' placeholder='password')
             li
-                a(href="/") Return
+                if user
+                    a(href="/") Return Home
+                else
+                    a(href="/users/demo") Demo Login
                 button(type='submit' name='submit' id='submit' value='Log-In') Log In
