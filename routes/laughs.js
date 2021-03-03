@@ -15,9 +15,9 @@ const validateLaugh = [
   check("laughBody")
     .exists({ checkFalsy: true })
     .withMessage("Please provide a joke."),
-  check("lols")
-    .isFloat({ min: 1, max: 5 })
-    .withMessage("Please provide a number between 1 and 5."),
+  // check("lols")
+  //   .isFloat({ min: 1, max: 5 })
+  //   .withMessage("Please provide a number between 1 and 5."),
 ];
 
 const validateEditLaugh = [
@@ -38,7 +38,7 @@ router.get(
   csrfProtection,
   asyncHandler(async (req, res, next) => {
     // loginUserCheck(req, res, next);
-    res.render("laughs", {
+    res.render("laugh-create", {
       title: "Add a Laugh",
       body: "",
       errors: "",
@@ -50,10 +50,11 @@ router.get(
 router.post(
   "/",
   csrfProtection,
-  validateLaugh,
   loginUserCheck,
+  // validateLaugh,
   handleValidationErrors,
   asyncHandler(async (req, res) => {
+    console.log("am I here");
     const { laughBody, bows, lols, reviewBody } = req.body;
     const userId = req.session.user.id;
     const userIdInt = parseInt(userId);
@@ -61,6 +62,7 @@ router.post(
     const lolsInt = parseInt(lols);
 
     const validateErrors = validationResult(req);
+    console.log(validateErrors.array().forEach((error) => console.log(error)));
 
     if (validateErrors.isEmpty()) {
       await db.Laugh.create({ body: laughBody, userId });
@@ -91,7 +93,7 @@ router.post(
       const errors = validateErrors.array().map((error) => {
         return error.msg;
       });
-      res.render("laughs", {
+      res.render("laugh-create", {
         title: "Add a Laugh",
         body,
         errors,
@@ -108,7 +110,7 @@ router.get(
     const laughId = parseInt(req.params.id, 10);
     const laugh = await db.Laugh.findByPk(laughId);
     const laughUserId = laugh.userId;
-    const url = "/laughs" + req.url;
+    const url = req.baseUrl + req.url;
     const errors = "";
 
     if (parseInt(laughUserId) !== parseInt(req.session.user.id)) {
@@ -143,7 +145,7 @@ router.get(
 
     pugObject = { laugh, user, rating, review, url, errors };
     if (req.session.user.id == laughUserId) {
-      res.render("laugh", pugObject);
+      res.render("laugh-update", pugObject);
     } else {
       res.render("reviews", pugObject);
     }
@@ -160,7 +162,7 @@ router.post(
 
     console.log("here");
 
-    const url = "/laughs" + req.url;
+    const url = req.baseUrl + req.url;
 
     const laughId = parseInt(req.params.id, 10);
     const laugh = await db.Laugh.findByPk(laughId);
@@ -221,7 +223,7 @@ router.post(
 
 // router.get('/:id(\\d+)/update', asyncHandler(async (req, res, next) => {
 //   const id = req.params.id
-//   res.redirect('laughs/' + id);
+//   res.redirect('req.baseUrl + id);
 // }))
 
 // Delete a specific laugh
@@ -268,7 +270,7 @@ router.get(
     const laughId = parseInt(req.params.id, 10);
     const laugh = await db.Laugh.findByPk(laughId);
     const laughUserId = laugh.userId;
-    const url = "/laughs" + req.url;
+    const url = req.baseUrl + req.url;
     const errors = "";
 
     let userIdInt = "";
@@ -311,6 +313,7 @@ router.get(
   })
 );
 
+// get a specific laugh's reviews
 router.post(
   "/:id(\\d+)/reviews",
   asyncHandler(async (req, res, next) => {
@@ -319,7 +322,7 @@ router.post(
     const laughUserId = parseInt(laugh.userId);
     const userIdInt = parseInt(req.session.user.id);
     const { reviewBody } = req.body;
-    const url = "/laughs" + req.url;
+    const url = req.baseUrl + req.url;
     const errors = "";
 
     let review = await db.Review.findOne({
@@ -370,7 +373,7 @@ router.get(
 
     if (review) {
       await review.destroy();
-      const url = "/laughs/" + req.params.id + "/reviews";
+      const url = req.baseUrl + req.params.id + "/reviews";
       res.redirect(url);
     } else {
       const err = new Error("Review not found");
