@@ -1,14 +1,16 @@
+const { check, body, validationResult } = require("express-validator");
 const express = require("express");
-const router = express.Router();
-const db = require("../db/models");
 const { Sequelize } = require("../db/models");
+
 const {
-  csrfProtection,
   asyncHandler,
+  csrfProtection,
   handleValidationErrors,
   loginUserCheck,
 } = require("../utils");
-const { check, body, validationResult } = require("express-validator");
+const db = require("../db/models");
+
+const router = express.Router();
 const Op = Sequelize.Op;
 
 const validateLaugh = [
@@ -19,6 +21,18 @@ const validateLaugh = [
   //   .isFloat({ min: 1, max: 5 })
   //   .withMessage("Please provide a number between 1 and 5."),
 ];
+
+// const validateLogin = [
+//   check("username")
+//     .exists({ checkFalsy: true })
+//     .withMessage("Please provide your login username."),
+//   check("username")
+//     .isLength({ max: 30 })
+//     .withMessage("Your username cannot be longer than 30 characters."),
+//   check("password")
+//     .exists({ checkFalsy: true })
+//     .withMessage("Please provide your password."),
+// ];
 
 const validateEditLaugh = [
   // check('laughBody')
@@ -51,10 +65,11 @@ router.post(
   "/",
   csrfProtection,
   loginUserCheck,
-  // validateLaugh,
+  validateLaugh,
   handleValidationErrors,
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req, res, next) => {
     console.log("am I here");
+    console.log(req.body);
     const { laughBody, bows, lols, reviewBody } = req.body;
     const userId = req.session.user.id;
     const userIdInt = parseInt(userId);
@@ -62,7 +77,6 @@ router.post(
     const lolsInt = parseInt(lols);
 
     const validateErrors = validationResult(req);
-    console.log(validateErrors.array().forEach((error) => console.log(error)));
 
     if (validateErrors.isEmpty()) {
       await db.Laugh.create({ body: laughBody, userId });
