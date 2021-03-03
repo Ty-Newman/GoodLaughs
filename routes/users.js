@@ -15,7 +15,7 @@ const Op = Sequelize.Op;
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
+  res.redirect("/");
 });
 
 router.get(
@@ -23,13 +23,14 @@ router.get(
   csrfProtection,
   asyncHandler(async (req, res) => {
     const user = await db.User.findOne({ where: { username: "Demo" } });
-    console.log(user);
+
+    req.session.save();
     req.session.user = {
       username: user.username,
       id: user.id,
       csrfToken: req.csrfToken(),
     };
-    req.session.save();
+
     return res.redirect("/");
   })
 );
@@ -39,7 +40,9 @@ router.get("/login", csrfProtection, (req, res) => {
 
   if (req.session.user) {
     errors.push(`You are currently logged in as: ${req.session.user.username}`);
+    res.redirect("/");
   }
+
   res.render("login", {
     title: "Login",
     csrfToken: req.csrfToken(),
