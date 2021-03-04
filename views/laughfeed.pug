@@ -1,4 +1,4 @@
-extends layout
+extends layout laughboxes.pug
 append head
   link(rel='stylesheet' href='/stylesheets/laughfeed.css')
 block content
@@ -24,6 +24,11 @@ block content
           a(id='write-review' href='#') Write a Review
           ul
             li= laugh.review
+      div
+        form(action='/laughboxes' method="post")
+          select(name='dropDown', id='add-to-laughbox')
+              each laughbox in laughboxes
+                input(type='submit', value='Submit')
 
 
 
