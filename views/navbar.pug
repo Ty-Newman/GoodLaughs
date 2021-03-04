@@ -14,13 +14,7 @@ div
                 a(href="/") Home
                 a(href="/laughboxes") MyLaughBoxes
                 a(href="/laughs") Add-a-Laugh
-            else
-                a(href="/") Home
-                a(href="/laughs") Add-a-Laugh
 
-    //- div
-    //- #searchBar
-    //-     input(type='text' name='search' placeholder='Search Laughs')
     div
     #buttons
         if user
@@ -28,5 +22,6 @@ div
             form(class='logoutUser' action='/users/logout' method='post')
                 button(class='logoutButton' type='submit') logout
         else
-            a(href="/users/login") login
-            a(href="/users/signup") signup
+            a(href="/users/demo") Demo
+            a(href="/users/login") Login
+            a(href="/users/signup") Signup
