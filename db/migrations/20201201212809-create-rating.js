@@ -1,40 +1,39 @@
-'use strict';
+"use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Ratings', {
+    return queryInterface.createTable("Ratings", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       bows: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
       },
       lols: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
+        type: Sequelize.NUMERIC,
       },
       userId: {
         type: Sequelize.INTEGER,
-        references: { model: "Users" }
+        references: { model: "Users" },
       },
       laughId: {
         type: Sequelize.INTEGER,
-        references: { model: "Laughs" }
+        references: { model: "Laughs" },
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Ratings');
-  }
+    return queryInterface.dropTable("Ratings");
+  },
 };

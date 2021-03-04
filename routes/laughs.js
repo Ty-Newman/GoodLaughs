@@ -17,9 +17,9 @@ const validateLaugh = [
   check("laughBody")
     .exists({ checkFalsy: true })
     .withMessage("Please provide a joke."),
-  // check("lols")
-  //   .isFloat({ min: 1, max: 5 })
-  //   .withMessage("Please provide a number between 1 and 5."),
+  check("lols")
+    .isFloat({ min: 1, max: 5 })
+    .withMessage("Please provide a number between 1 and 5."),
 ];
 
 // const validateLogin = [
@@ -52,7 +52,7 @@ router.get(
   csrfProtection,
   asyncHandler(async (req, res, next) => {
     // loginUserCheck(req, res, next);
-    res.render("laugh-create", {
+    res.render("laughs", {
       title: "Add a Laugh",
       body: "",
       errors: "",
@@ -68,52 +68,42 @@ router.post(
   validateLaugh,
   handleValidationErrors,
   asyncHandler(async (req, res, next) => {
-    console.log("am I here");
-    console.log(req.body);
     const { laughBody, bows, lols, reviewBody } = req.body;
     const userId = req.session.user.id;
     const userIdInt = parseInt(userId);
     const bowsBoolean = bows === "on" ? true : false;
-    const lolsInt = parseInt(lols);
+    let lolsInt = parseInt(lols);
 
-    const validateErrors = validationResult(req);
+    await db.Laugh.create({ body: laughBody, userId });
+    const savedLaugh = await db.Laugh.findOne({
+      where: {
+        [Op.and]: [{ userId: userIdInt }, { body: laughBody }],
+      },
+      include: db.User,
+    });
 
-    if (validateErrors.isEmpty()) {
-      await db.Laugh.create({ body: laughBody, userId });
-      const savedLaugh = await db.Laugh.findOne({
-        where: {
-          [Op.and]: [{ userId: userIdInt }, { body: laughBody }],
-        },
-        include: db.User,
-      });
+    const laughIdInt = parseInt(savedLaugh.id);
 
-      const laughIdInt = parseInt(savedLaugh.id);
+    if (Number.isNaN(lolsInt)) {
+      lolsInt = null;
+    }
 
-      await db.Rating.create({
-        bows: bowsBoolean,
-        lols: lolsInt,
-        userId: userIdInt,
-        laughId: laughIdInt,
-      });
+    await db.Rating.create({
+      bows: bowsBoolean,
+      lols: lolsInt,
+      userId: userIdInt,
+      laughId: laughIdInt,
+    });
 
+    if (reviewBody !== undefined) {
       await db.Review.create({
         body: reviewBody,
         userId: userIdInt,
         laughId: laughIdInt,
       });
-
-      res.redirect("/");
-    } else {
-      const errors = validateErrors.array().map((error) => {
-        return error.msg;
-      });
-      res.render("laugh-create", {
-        title: "Add a Laugh",
-        body,
-        errors,
-        csrfToken: req.csrfToken(),
-      });
     }
+
+    res.redirect("/");
   })
 );
 
@@ -159,7 +149,7 @@ router.get(
 
     pugObject = { laugh, user, rating, review, url, errors };
     if (req.session.user.id == laughUserId) {
-      res.render("laugh-update", pugObject);
+      res.render("laugh", pugObject);
     } else {
       res.render("reviews", pugObject);
     }
