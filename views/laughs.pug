@@ -6,7 +6,7 @@ append head
 block content
   a(id="return" href="/") Return to Main Page
   br
-  h2 Laughs
+  h2(id="banner") Add-A-Laugh
   if errors.length
     br
     each error in errors
@@ -17,15 +17,14 @@ block content
       input(type='hidden' name='_csrf' value=csrfToken)
       li
         label Share something funny...
-        textarea(name='laughBody' placeholder="What's so funny?")
+        textarea(id="text_input" name='laughBody' placeholder="What's so funny?")
       li
-        label Bow (for those hahahahaahas!)
+        label Bow (for the extra hahahas!)
         input(type='radio' name='bows')
       li
         label Lols 1-5 (optional)
-        input(type='number' name='lols' placeholder="5")
+        input(id="lol" type='number' name='lols' placeholder="5")
       li
         label Write a review... (optional)
-        textarea(name='reviewBody' placeholder="What are you thinking!?")
-      li
-        button(type='submit' name='submit' id='submit' value='Laughs') Submit
+        textarea(id="text_input" name='reviewBody' placeholder="What are you thinking!?")
+      button(type='submit' name='submit' id='submit' value='Laughs') Submit
