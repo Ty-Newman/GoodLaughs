@@ -71,6 +71,9 @@
     justify-content: left;
     align-content: flex-start;
     font-size: 16px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid black;
 }
 #body{
     padding: 1em;

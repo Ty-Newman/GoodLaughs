@@ -4,7 +4,7 @@ append head
   link(rel="stylesheet", href="/stylesheets/laughs.css")
 
 block content
-  a(href="/") Return to Main Page
+  a(id="return" href="/") Return to Main Page
   br
   h2 Laughs
   if errors.length
@@ -22,7 +22,7 @@ block content
         label Bow (for those hahahahaahas!)
         input(type='radio' name='bows')
       li
-        label Lols 1-5
+        label Lols 1-5 (optional)
         input(type='number' name='lols' placeholder="5")
       li
         label Write a review...
