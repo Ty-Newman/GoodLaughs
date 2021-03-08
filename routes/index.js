@@ -16,7 +16,7 @@ router.get(
 
     for (let i = 0; i < laughs.length; i++) {
       const laugh = laughs[i];
-      const ratings = await db.Rating.findAll({
+      const rating = await db.Rating.findAll({
         where: {
           laughId: laugh.id,
           userId: loggedInUserId,
@@ -25,10 +25,12 @@ router.get(
 
       let bows = false;
       let lols = null;
-      if (ratings[0]) {
-        bows = ratings[0].bows;
-        lols = ratings[0].lols;
+
+      if (rating[0]) {
+        bows = rating[0].bows;
+        lols = rating[0].lols;
       }
+
       laugh.bows = bows;
       laugh.lols = lols;
 
@@ -39,17 +41,33 @@ router.get(
         include: db.User,
       });
 
+      laugh.reviews = reviews;
+
+      let reviewByLoggedInUser = false;
+
+      for (let i = 0; i < reviews.length; i++) {
+        console.log("this review", reviews[i]);
+        console.log("this type", typeof laugh.User.id);
+        if (reviews[i].userId === laugh.User.id) {
+          reviewByLoggedInUser = true;
+          break;
+        } 
+      }
+
+      laugh.reviewByLoggedInUser = reviewByLoggedInUser;
+
       let review = null;
       if (reviews[0]) {
         review = reviews[0].body;
       }
+
       laugh.review = review;
-      laugh.reviews = reviews;
 
       let createdLaugh = false;
       if (loggedInUserId === parseInt(laugh.User.id)) {
         createdLaugh = true;
       }
+
       laugh.createdLaugh = createdLaugh;
     }
 

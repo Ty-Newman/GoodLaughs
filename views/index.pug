@@ -51,7 +51,11 @@ block content
       div(id='review-wrapper')
           if laugh.createdLaugh
             a(id='write-review' href='/laughs/' + laugh.id) Edit this Laugh
-          a(id='edit-laugh' href='/laughs/' + laugh.id + '/reviews') Write a Review
+          a(id='edit-laugh' href='/laughs/' + laugh.id + '/reviews')
+            if !laugh.reviewByLoggedInUser
+              | Write a Review
+            else 
+              | Edit Your Review
           if laugh.reviews
             each review in laugh.reviews
               ul
