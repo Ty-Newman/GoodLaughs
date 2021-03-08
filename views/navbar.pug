@@ -18,7 +18,7 @@ div
     div
     #buttons
         if user
-            span(class='helloUser') Welcome, #{user.username}!
+            span(class='helloUser') Welcome, #{user.username}! &nbsp
             form(class='logoutUser' action='/users/logout' method='post')
                 button(class='logoutButton' type='submit') logout
         else
