@@ -6,6 +6,9 @@ form{
     display: flex;
     justify-content: center;
 }
+#banner {
+    font-size: 36px;
+}
 table{
     border: 2px solid black ;
     color: #F4F1EA;
@@ -18,18 +21,46 @@ thead{
 tbody tr:nth-child(odd) {
     background-color: #462a01;
     text-align: center;
-  }
+}
 
   tbody tr:nth-child(even) {
     background-color: #201303;
-    text-align: center;
-  }
-td{
+}
+
+td {
     padding: 2em;
 }
-li{
+
+#text_input {
+    font-size: 16px;
+    height: 50px;
+}
+
+li {
     list-style: none;
     padding: 1em;
+    border: 1px solid black;
+}
+
+button {
+    text-decoration: none;
+    padding: 8px 16px;
+    border: none;
+    background: #333;
+    color: #f2f2f2;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    border-radius: 2px;
+    margin-bottom: 30px;
+}
+
+#lol {
+    margin-right: -0.01px;
+}
+
+
+textarea {
+    resize: none;
 }
 
 #return {
