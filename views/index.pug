@@ -10,8 +10,6 @@ append head
 block content
 
   #main
-    script.
-      const rateBows = () => window.location.href = '/laughs/' + laugh.id + '/ratings/';
     div
     #sideBar
       h2 Welcome to GoodLaughs, #{user.username}!
@@ -34,7 +32,7 @@ block content
       div(id='content')
         h2(id='user-name')= laugh.User.username
         p(id='body')= laugh.body
-        input(checked=(laugh.bows ? "checked" : undefined) id="bows" onclick="rateBows" type="checkbox")
+        input(checked=(laugh.bows ? "checked" : undefined) id="bows" class="bow" type="checkbox")
         label(for="bows" title="text")  Bow / Superlike
         //- p=laugh.lols
         div(class="rate")
@@ -48,15 +46,20 @@ block content
           label(for="star2" title="text") 2 stars
           input(checked=(laugh.lols === "1" ? "checked" : undefined) type="radio" id="star1" name="rate" onclick="rateLols" value="1")
           label(for="star1" title="text") 1 star
+        //- function rateBows() => {
+        //-   console.log("I am here.")
+        //-   window.location.href = '/laughs/' + laugh.id + '/ratings/'
+        //-   };
+      //- p=rateBows()
       div(id='review-wrapper')
-          if laugh.createdLaugh
-            a(id='write-review' href='/laughs/' + laugh.id) Edit this Laugh
-          a(id='edit-laugh' href='/laughs/' + laugh.id + '/reviews')
-            if !laugh.reviewByLoggedInUser
-              | Write a Review
-            else 
-              | Edit Your Review
-          if laugh.reviews
-            each review in laugh.reviews
-              ul
-                li= review.body + ' - ' + review.User.username
+        if laugh.createdLaugh
+          a(id='write-review' href='/laughs/' + laugh.id) Edit this Laugh
+        a(id='edit-laugh' href='/laughs/' + laugh.id + '/reviews')
+          if !laugh.reviewByLoggedInUser
+            | Write a Review
+          else 
+            | Edit Your Review
+        if laugh.reviews
+          each review in laugh.reviews
+            ul
+              li= review.body + ' - ' + review.User.username
