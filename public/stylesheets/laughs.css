@@ -1,10 +1,10 @@
-*{
-    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+* {
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-form{
-    display: flex;
-    justify-content: center;
+form {
+  display: flex;
+  justify-content: center;
 }
 #banner {
     font-size: 36px;
@@ -15,8 +15,8 @@ table{
     border-collapse: collapse;
     width: 100%;
 }
-thead{
-    background-color: #61491d;
+thead {
+  background-color: #61491d;
 }
 tbody tr:nth-child(odd) {
     background-color: #462a01;
@@ -64,19 +64,33 @@ textarea {
 }
 
 #return {
-    text-decoration: none;
-    position: relative;
-    top: 25px;
-    left: 15px;
-    padding: 8px 16px;
-    border: none;
-    background: #333;
-    color: #f2f2f2;
-    text-transform: uppercase;
-    letter-spacing: .09em;
-    border-radius: 2px;
+  text-decoration: none;
+  position: relative;
+  top: 25px;
+  left: 15px;
+  padding: 8px 16px;
+  border: none;
+  background: #333;
+  color: #f2f2f2;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  border-radius: 2px;
 }
 
+#delete-link {
+  text-decoration: none;
+  position: relative;
+  top: 0px;
+  left: 5px;
+  padding: 8px 16px;
+  border: none;
+  background: #333;
+  color: #f2f2f2;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  border-radius: 2px;
+  font-size: small;
+}
 
 /* ul{
     display: flex;
