@@ -37,6 +37,9 @@ block content
         p(id='body')= laugh.body
         input(checked=(laugh.bows ? "checked" : undefined) class="bow" id="bows" type="checkbox")
         label(for="bows" title="text")  Bow / Superlike
+        select(class="laughboxes")
+          each laughbox in laughboxes
+            option(value=laughbox.name) #{laughbox.name}
         //- p=laugh.lols
         div(class="rate")
           input(checked=(laugh.lols === "5" ? "checked" : undefined) type="radio" id="star5" name="rate" onclick="rateLols" value="5")
@@ -60,7 +63,7 @@ block content
         a(id='edit-laugh' href='/laughs/' + laugh.id + '/reviews')
           if !laugh.reviewByLoggedInUser
             | Write a Review
-          else 
+          else
             | Edit Your Review
         if laugh.reviews
           each review in laugh.reviews
