@@ -13,6 +13,13 @@ router.get(
       include: db.User,
       order: [["updatedAt", "DESC"]],
     });
+    const laughboxes = await db.LaughBox.findAll({
+      include: db.User,
+      order: [["updatedAt", "DESC"]],
+      where: {
+        userId: loggedInUserId
+      }
+    });
 
     for (let i = 0; i < laughs.length; i++) {
       const laugh = laughs[i];
@@ -75,6 +82,7 @@ router.get(
       title: "Laughs",
       csrfToken: req.csrfToken(),
       laughs,
+      laughboxes,
     });
   })
 );
