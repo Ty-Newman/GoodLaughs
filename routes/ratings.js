@@ -38,13 +38,18 @@ router.get(
   loginUserCheck,
   asyncHandler(async (req, res, next) => {
     const laughId = req.params.laughId;
+    const userId = req.session.user.id;
 
-    const rating = await db.Rating.findOne({ where: { laughId } });
+    console.log("hi user", req.session);
+
+    const rating = await db.Rating.findOne({ where: { laughId, userId } });
+    console.log("hit rating", rating);
+    console.log(rating === null);
     if (rating === null) {
-      db.Rating.build({
+      db.Rating.create({
         bows: true,
         lols: null,
-        userId: req.params.user.id,
+        userId,
         laughId,
       });
     } else {
