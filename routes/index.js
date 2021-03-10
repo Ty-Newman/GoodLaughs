@@ -23,6 +23,8 @@ router.get(
         },
       });
 
+      console.log("hi laugh", laugh);
+
       let bows = false;
       let lols = null;
 
@@ -51,7 +53,7 @@ router.get(
         if (reviews[i].userId === laugh.User.id) {
           reviewByLoggedInUser = true;
           break;
-        } 
+        }
       }
 
       laugh.reviewByLoggedInUser = reviewByLoggedInUser;
