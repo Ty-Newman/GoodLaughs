@@ -6,29 +6,61 @@ form {
   display: flex;
   justify-content: center;
 }
-table {
-  border: 2px solid black;
-  color: #f4f1ea;
-  border-collapse: collapse;
-  width: 100%;
+#banner {
+    font-size: 36px;
+}
+table{
+    border: 2px solid black ;
+    color: #F4F1EA;
+    border-collapse: collapse;
+    width: 100%;
 }
 thead {
   background-color: #61491d;
 }
 tbody tr:nth-child(odd) {
-  background-color: #462a01;
-  text-align: center;
+    background-color: #462a01;
+    text-align: center;
 }
 
-tbody tr:nth-child(even) {
-  background-color: #201303;
+  tbody tr:nth-child(even) {
+    background-color: #201303;
 }
+
 td {
-  padding: 2em;
+    padding: 2em;
 }
+
+#text_input {
+    font-size: 16px;
+    height: 50px;
+}
+
 li {
-  list-style: none;
-  padding: 1em;
+    list-style: none;
+    padding: 1em;
+    border: 1px solid black;
+}
+
+button {
+    text-decoration: none;
+    padding: 8px 16px;
+    border: none;
+    background: #333;
+    color: #f2f2f2;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    border-radius: 2px;
+    margin-bottom: 30px;
+}
+
+#lol {
+    margin-right: -0.01px;
+}
+
+
+textarea {
+    resize: none;
 }
 
 #return {
