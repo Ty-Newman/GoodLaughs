@@ -10,13 +10,8 @@ for (let i = 0; i < bows.length; i++) {
       }
     }
 
-    console.log(laughId);
     if (laughId !== undefined) {
       location.href = "ratings/" + laughId;
     }
-    // user needs to be logged in for this to work otherwise security risk
-    // fire off window.location.href, flip whatever is in the database
-
-    // slow
   });
 }
