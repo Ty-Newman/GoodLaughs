@@ -32,7 +32,7 @@ block content
       div(id='content')
         h2(id='user-name')= laugh.User.username
         p(id='body')= laugh.body
-        input(checked=(laugh.bows ? "checked" : undefined) id="bows" class="bow" type="checkbox")
+        input(checked=(laugh.bows ? "checked" : undefined) class="bow" id="bows" type="checkbox")
         label(for="bows" title="text")  Bow / Superlike
         //- p=laugh.lols
         div(class="rate")

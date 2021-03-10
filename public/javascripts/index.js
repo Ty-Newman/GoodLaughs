@@ -1,22 +1,23 @@
-window.addEventListener("load", (event) => {
-  console.log("hello from javascript!");
-});
-
 const bows = document.getElementsByClassName("bow");
 for (let i = 0; i < bows.length; i++) {
   bows[i].addEventListener("click", (event) => {
-    console.log(event.target.attributes);
+    const laughContainer = event.currentTarget.parentNode;
+    const childNodes = laughContainer.childNodes;
+    let username = "";
+    let laughBody = "";
+    for (let node of childNodes) {
+      if (node.id === "user-name") {
+        username = node.innerHTML;
+      } else if (node.id === "body") {
+        laughBody = node.innerHTML;
+      }
+    }
+
+    console.log(username, laughBody);
+    if (username.length > 0 && laughBody.length > 0) {
+      window.location.href = "/ratings/" + username + "/" + laughBody;
+    }
+    // user needs to be logged in for this to work otherwise security risk
     // fire off window.location.href, flip whatever is in the database
   });
 }
-
-// window.addEventListener("onClick", (event) => {
-//   console.log(event.target.id);
-//   //       script(src="/javascripts/index.js" type="module" defer)
-//   //   -
-//   //     function rateBows() {
-//   //       console.log("I am here.");
-//   //       //- window.location.href = "/laughs/" + laugh.id + "/ratings/";
-//   //     }
-//   //     rateBows()
-// });
