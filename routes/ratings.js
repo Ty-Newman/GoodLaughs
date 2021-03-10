@@ -40,11 +40,8 @@ router.get(
     const laughId = req.params.laughId;
     const userId = req.session.user.id;
 
-    console.log("hi user", req.session);
-
     const rating = await db.Rating.findOne({ where: { laughId, userId } });
-    console.log("hit rating", rating);
-    console.log(rating === null);
+
     if (rating === null) {
       db.Rating.create({
         bows: true,
