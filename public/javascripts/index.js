@@ -15,3 +15,22 @@ for (let i = 0; i < bows.length; i++) {
     }
   });
 }
+
+const laughboxes = document.getElementsByClassName("laughboxes");
+for (let i = 0; i < laughboxes.length; i++) {
+  laughboxes[i].addEventListener("change", (event) => {
+    // const laughContainer = event.currentTarget.parentNode;
+    // const childNodes = laughContainer.childNodes;
+    // let laughId;
+    // for (let node of childNodes) {
+    //   if (node.id === "laughId") {
+    //     laughId = node.attributes.name.nodeValue;
+    //   }
+    // }
+    console.dir(event)
+    let laughBoxId;
+    if (laughBoxId !== undefined) {
+      location.href = "laughboxes/" + laughBoxId;
+    }
+  });
+}

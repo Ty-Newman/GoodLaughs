@@ -38,8 +38,9 @@ block content
         input(checked=(laugh.bows ? "checked" : undefined) class="bow" id="bows" type="checkbox")
         label(for="bows" title="text")  Bow / Superlike
         select(class="laughboxes")
+          option(value=null) add to Laugh Box
           each laughbox in laughboxes
-            option(value=laughbox.name) #{laughbox.name}
+            option(value=laughbox.id) #{laughbox.name}
         //- p=laugh.lols
         div(class="rate")
           input(checked=(laugh.lols === "5" ? "checked" : undefined) type="radio" id="star5" name="rate" onclick="rateLols" value="5")
