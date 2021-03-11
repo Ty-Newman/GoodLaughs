@@ -31,7 +31,18 @@ router.get(
       csrfToken: req.csrfToken(),
     };
 
-    return res.redirect("/");
+    console.log(req.hostname);
+    res.redirect("/");
+
+    // const errors = [];
+    // errors.push(`You are currently logged in as: ${req.session.user.username}`);
+
+    // res.render("login", {
+    //   title: "Login",
+    //   csrfToken: req.csrfToken(),
+    //   errors,
+    //   user: req.session.user,
+    // });
   })
 );
 
