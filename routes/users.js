@@ -24,25 +24,15 @@ router.get(
   asyncHandler(async (req, res) => {
     const user = await db.User.findOne({ where: { username: "Demo" } });
 
-    req.session.save();
     req.session.user = {
       username: user.username,
       id: user.id,
       csrfToken: req.csrfToken(),
     };
 
-    console.log(req.hostname);
+    req.session.save();
+
     res.redirect("/");
-
-    // const errors = [];
-    // errors.push(`You are currently logged in as: ${req.session.user.username}`);
-
-    // res.render("login", {
-    //   title: "Login",
-    //   csrfToken: req.csrfToken(),
-    //   errors,
-    //   user: req.session.user,
-    // });
   })
 );
 
@@ -216,7 +206,7 @@ router.post(
 );
 
 router.post("/logout", (req, res) => {
-  //logoutUser(req, res);
+  logoutUser(req, res);
   req.session.user = null;
   req.session.save(() => {
     res.redirect("/");
