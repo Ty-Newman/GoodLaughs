@@ -164,8 +164,6 @@ router.post(
   asyncHandler(async (req, res, next) => {
     // loginUserCheck(req, res, next);
 
-    console.log("here");
-
     const url = req.baseUrl + req.url;
 
     const laughId = parseInt(req.params.id, 10);
@@ -220,7 +218,6 @@ router.post(
     // });
     // pugObject = { laugh, user, rating, review, url, errors }
     // let nextUrl = url.split("/update")[0];
-    // console.log(nextUrl);
     res.redirect("/");
   })
 );
@@ -339,7 +336,6 @@ router.post(
       review.body = reviewBody;
       await review.save();
     } else {
-      console.log(reviewBody, req.session.user.id, req.params.id);
       await db.Review.create({
         body: reviewBody,
         userId: req.session.user.id,

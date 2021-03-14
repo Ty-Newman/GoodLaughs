@@ -17,8 +17,8 @@ router.get(
       include: db.User,
       order: [["updatedAt", "DESC"]],
       where: {
-        userId: loggedInUserId
-      }
+        userId: loggedInUserId,
+      },
     });
 
     for (let i = 0; i < laughs.length; i++) {
@@ -53,8 +53,6 @@ router.get(
       let reviewByLoggedInUser = false;
 
       for (let i = 0; i < reviews.length; i++) {
-        // console.log("this review", reviews[i]);
-        // console.log("this type", typeof laugh.User.id);
         if (reviews[i].userId === laugh.User.id) {
           reviewByLoggedInUser = true;
           break;

@@ -53,11 +53,6 @@ block content
           label(for="star2" title="text") 2 stars
           input(checked=(laugh.lols === "1" ? "checked" : undefined) id="star1" name=laugh.id type="radio" value="1")
           label(for="star1" title="text") 1 star
-        //- function rateBows() => {
-        //-   console.log("I am here.")
-        //-   window.location.href = '/laughs/' + laugh.id + '/ratings/'
-        //-   };
-      //- p=rateBows()
       div(id='review-wrapper')
         if laugh.createdLaugh
           a(id='write-review' href='/laughs/' + laugh.id) Edit this Laugh
