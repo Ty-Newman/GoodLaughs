@@ -24,12 +24,12 @@ router.get(
   asyncHandler(async (req, res) => {
     const user = await db.User.findOne({ where: { username: "Demo" } });
 
-    req.session.save();
     req.session.user = {
       username: user.username,
       id: user.id,
       csrfToken: req.csrfToken(),
     };
+    req.session.save();
 
     return res.redirect("/");
   })
