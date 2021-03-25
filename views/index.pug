@@ -41,25 +41,17 @@ block content
           option(value=null) add to Laugh Box
           each laughbox in laughboxes
             option(value=laughbox.id) #{laughbox.name}
-        //- p=laugh.lols
-        // div(class="rate")
-        div
-          const star5 = "#{laugh.id}-star5"
-          input(checked=(laugh.lols === "5" ? "checked" : undefined) type="radio" id="star5" name=laugh.id onclick="rateLols" value="5")
-          label(for="star5" title="text") 5 stars
-          input(checked=(laugh.lols === "4" ? "checked" : undefined) type="radio" id="star4" name=laugh.id onclick="rateLols" value="4")
-          label(for="star4" title="text") 4 stars
-          input(checked=(laugh.lols === "3" ? "checked" : undefined) type="radio" id="star3" name=laugh.id onclick="rateLols" value="3")
-          label(for="star3" title="text") 3 stars
-          input(checked=(laugh.lols === "2" ? "checked" : undefined) type="radio" id="star2" name=laugh.id onclick="rateLols" value="2")
-          label(for="star2" title="text") 2 stars
-          input(checked=(laugh.lols === "1" ? "checked" : undefined) type="radio" id="star1" name=laugh.id onclick="rateLols" value="1")
-          label(for="star1" title="text") 1 star
-        //- function rateBows() => {
-        //-   console.log("I am here.")
-        //-   window.location.href = '/laughs/' + laugh.id + '/ratings/'
-        //-   };
-      //- p=rateBows()
+        div(class="rate")
+          input(checked=(laugh.lols === "5" ? "checked" : undefined) type="radio" id=laugh.id+"-star-5" name=laugh.id value="5")
+          label(for=laugh.id+"-star-5" title="text") 5 stars
+          input(checked=(laugh.lols === "4" ? "checked" : undefined) type="radio" id=laugh.id+"-star-4" name=laugh.id value="4")
+          label(for=laugh.id+"-star-4" title="text") 4 stars
+          input(checked=(laugh.lols === "3" ? "checked" : undefined) type="radio" id=laugh.id+"-star-3" name=laugh.id value="3")
+          label(for=laugh.id+"-star-3" title="text") 3 stars
+          input(checked=(laugh.lols === "2" ? "checked" : undefined) type="radio" id=laugh.id+"-star-2" name=laugh.id value="2")
+          label(for=laugh.id+"-star-2" title="text") 2 stars
+          input(checked=(laugh.lols === "1" ? "checked" : undefined) type="radio" id=laugh.id+"-star-1" name=laugh.id value="1")
+          label(for=laugh.id+"-star-1" title="text") 1 star
       div(id='review-wrapper')
         if laugh.createdLaugh
           a(id='write-review' href='/laughs/' + laugh.id) Edit this Laugh

@@ -58,37 +58,30 @@ router.get(
 );
 
 // Add a new review
-// router.post(
-//   "/:id(\\d+)",
-//   csrfProtection,
-//   validateReview,
-//   handleValidationErrors,
-//   asyncHandler(async (req, res, next) => {
-//     const { reviewBody } = req.body;
-//     const userId = parseInt(req.session.user.id);
-//     const laughId = parseInt(req.params.id, 10);
+router.get(
+  "/:laughId(\\d+)/:starRating(\\d+)",
+  // csrfProtection,
+  loginUserCheck,
+  asyncHandler(async (req, res, next) => {
+    const laughId = req.params.laughId;
+    const starRating = req.params.starRating;
+    const userId = req.session.user.id;
 
-//     const validateErrors = validationResult(req);
+    const rating = await db.Rating.findOne({ where: { laughId, userId } });
 
-//     if (validateErrors.insEmpty()) {
-//       await db.Review.create({
-//         body: reviewBody,
-//         userId: userId,
-//         laughId: laughId,
-//       });
+    if (rating === null) {
+      db.Rating.create({
+        bows: false,
+        lols: starRating,
+        userId,
+        laughId,
+      });
+    } else {
+      rating.update({ lols: starRating });
+    }
 
-//       res.redirect("/");
-//     } else {
-//       const errors = validateErrors.array().map((error) => {
-//         res.render("reviews", {
-//           title: "Add a new Review",
-//           body,
-//           errors,
-//           csrfToken: req.csrfToken(),
-//         });
-//       });
-//     }
-//   })
-// );
+    res.redirect("/");
+  })
+);
 
 module.exports = router;
