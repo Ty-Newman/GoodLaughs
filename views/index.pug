@@ -42,16 +42,18 @@ block content
           each laughbox in laughboxes
             option(value=laughbox.id) #{laughbox.name}
         //- p=laugh.lols
-        div(class="rate")
-          input(checked=(laugh.lols === "5" ? "checked" : undefined) type="radio" id="star5" name="rate" onclick="rateLols" value="5")
+        // div(class="rate")
+        div
+          const star5 = "#{laugh.id}-star5"
+          input(checked=(laugh.lols === "5" ? "checked" : undefined) type="radio" id="star5" name=laugh.id onclick="rateLols" value="5")
           label(for="star5" title="text") 5 stars
-          input(checked=(laugh.lols === "4" ? "checked" : undefined) type="radio" id="star4" name="rate" onclick="rateLols" value="4")
+          input(checked=(laugh.lols === "4" ? "checked" : undefined) type="radio" id="star4" name=laugh.id onclick="rateLols" value="4")
           label(for="star4" title="text") 4 stars
-          input(checked=(laugh.lols === "3" ? "checked" : undefined) type="radio" id="star3" name="rate" onclick="rateLols" value="3")
+          input(checked=(laugh.lols === "3" ? "checked" : undefined) type="radio" id="star3" name=laugh.id onclick="rateLols" value="3")
           label(for="star3" title="text") 3 stars
-          input(checked=(laugh.lols === "2" ? "checked" : undefined) type="radio" id="star2" name="rate" onclick="rateLols" value="2")
+          input(checked=(laugh.lols === "2" ? "checked" : undefined) type="radio" id="star2" name=laugh.id onclick="rateLols" value="2")
           label(for="star2" title="text") 2 stars
-          input(checked=(laugh.lols === "1" ? "checked" : undefined) type="radio" id="star1" name="rate" onclick="rateLols" value="1")
+          input(checked=(laugh.lols === "1" ? "checked" : undefined) type="radio" id="star1" name=laugh.id onclick="rateLols" value="1")
           label(for="star1" title="text") 1 star
         //- function rateBows() => {
         //-   console.log("I am here.")
