@@ -6,6 +6,7 @@ const {
   csrfProtection,
   asyncHandler,
   handleValidationErrors,
+  loginUserCheck,
 } = require("../utils");
 const { check, validationResult } = require("express-validator");
 
@@ -19,14 +20,14 @@ const validateReview = [
 ];
 
 const laughNotFoundError = (id) => {
-  const err = Error("Laugh you referred could not be found.");
+  const err = Error("Laugh you referred to could not be found.");
   err.title = "Laugh not found";
   err.status = 404;
   return err;
 };
 
 const reviewNotFoundError = (id) => {
-  const err = Error("Review you referred could not be found.");
+  const err = Error("Review you referred to could not be found.");
   err.title = "Review not found";
   err.status = 404;
   return err;
@@ -34,6 +35,8 @@ const reviewNotFoundError = (id) => {
 
 router.get(
   "/:id(\\d+)",
+  csrfProtection,
+  loginUserCheck,
   asyncHandler(async (req, res, next) => {
     const laughId = parseInt(req.params.id, 10);
     const laugh = await db.Laugh.findByPk(laughId);
@@ -55,6 +58,7 @@ router.get(
 router.post(
   "/:id(\\d+)",
   csrfProtection,
+  loginUserCheck,
   validateReview,
   handleValidationErrors,
   asyncHandler(async (req, res, next) => {
@@ -89,6 +93,7 @@ router.post(
 router.post(
   "/:id(\\d+)/delete",
   csrfProtection,
+  loginUserCheck,
   handleValidationErrors,
   asyncHandler(async (req, res, next) => {
     const reviewId = parseInt(req.params.id, 10);

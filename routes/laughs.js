@@ -1,4 +1,4 @@
-const { check, body, validationResult } = require("express-validator");
+const { body, check, validationResult } = require("express-validator");
 const express = require("express");
 const { Sequelize } = require("../db/models");
 
@@ -17,9 +17,12 @@ const validateLaugh = [
   check("laughBody")
     .exists({ checkFalsy: true })
     .withMessage("Please provide a joke."),
-  check("lols")
-    .isFloat({ min: 1, max: 5 })
-    .withMessage("Please provide a number between 1 and 5."),
+  check("lols"),
+  // .not()
+  // .isInt({ lt: 1, gt: 5 })
+  // .withMessage("Please provide a number between 1 and 5."),
+  //   .isFloat({ min: 1, max: 5 })
+  //   .withMessage("Please provide a number between 1 and 5."),
 ];
 
 // const validateLogin = [
@@ -50,8 +53,8 @@ const laughNotFoundError = (id) => {
 router.get(
   "/",
   csrfProtection,
+  loginUserCheck,
   asyncHandler(async (req, res, next) => {
-    // loginUserCheck(req, res, next);
     res.render("laughs", {
       title: "Add a Laugh",
       body: "",
@@ -110,6 +113,8 @@ router.post(
 // Retrieve a specific laugh
 router.get(
   "/:id(\\d+)",
+  csrfProtection,
+  loginUserCheck,
   asyncHandler(async (req, res, next) => {
     const laughId = parseInt(req.params.id, 10);
     const laugh = await db.Laugh.findByPk(laughId);
@@ -159,13 +164,11 @@ router.get(
 // Update a specific laugh
 router.post(
   "/:id(\\d+)/update",
+  csrfProtection,
+  loginUserCheck,
   validateEditLaugh,
   handleValidationErrors,
   asyncHandler(async (req, res, next) => {
-    // loginUserCheck(req, res, next);
-
-    console.log("here");
-
     const url = req.baseUrl + req.url;
 
     const laughId = parseInt(req.params.id, 10);
@@ -225,14 +228,11 @@ router.post(
   })
 );
 
-// router.get('/:id(\\d+)/update', asyncHandler(async (req, res, next) => {
-//   const id = req.params.id
-//   res.redirect('req.baseUrl + id);
-// }))
-
 // Delete a specific laugh
 router.get(
   "/:id(\\d+)/delete",
+  csrfProtection,
+  loginUserCheck,
   asyncHandler(async (req, res, next) => {
     const laughId = parseInt(req.params.id, 10);
     const laugh = await db.Laugh.findByPk(laughId);
@@ -270,6 +270,8 @@ router.get(
 // Retrieve a specific laughs reviews
 router.get(
   "/:id(\\d+)/reviews",
+  csrfProtection,
+  loginUserCheck,
   asyncHandler(async (req, res, next) => {
     const laughId = parseInt(req.params.id, 10);
     const laugh = await db.Laugh.findByPk(laughId);
@@ -320,6 +322,8 @@ router.get(
 // get a specific laugh's reviews
 router.post(
   "/:id(\\d+)/reviews",
+  csrfProtection,
+  loginUserCheck,
   asyncHandler(async (req, res, next) => {
     const laughId = parseInt(req.params.id, 10);
     const laugh = await db.Laugh.findByPk(laughId);
@@ -364,6 +368,8 @@ router.post(
 // Delete a review
 router.get(
   "/:id(\\d+)/reviews/delete",
+  csrfProtection,
+  loginUserCheck,
   handleValidationErrors,
   asyncHandler(async (req, res, next) => {
     const laughId = parseInt(req.params.id, 10);

@@ -44,7 +44,5 @@ for (let i = 0; i < rates.length; i++) {
     if (rateCSSId !== undefined) {
       location.href = "ratings/" + laughId + "/" + starRating;
     }
-
-    console.log(event.target.id, laughId, starRating);
   });
 }

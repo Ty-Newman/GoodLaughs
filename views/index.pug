@@ -36,7 +36,7 @@ block content
         h2(id='user-name')= laugh.User.username
         p(id='body')= laugh.body
         input(checked=(laugh.bows ? "checked" : undefined) class="bow" id="bows" type="checkbox")
-        label(for="bows" title="text")  Bow / Superlike
+        label(for="bows" title="text")  Bow / Superlike 
         select(class="laughboxes")
           option(value=null) add to Laugh Box
           each laughbox in laughboxes

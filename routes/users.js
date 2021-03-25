@@ -1,15 +1,14 @@
-var express = require("express");
-var router = express.Router();
-const db = require("../db/models");
-const bcrypt = require("bcryptjs");
 const {
-  csrfProtection,
   asyncHandler,
+  csrfProtection,
   handleValidationErrors,
   loginUserCheck,
 } = require("../utils");
-const { loginUser, logoutUser } = require("../auth");
+const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
+const db = require("../db/models");
+var express = require("express");
+var router = express.Router();
 const { Sequelize } = require("../db/models");
 const Op = Sequelize.Op;
 
@@ -204,8 +203,7 @@ router.post(
   })
 );
 
-router.post("/logout", (req, res) => {
-  //logoutUser(req, res);
+router.post("/logout", csrfProtection, loginUserCheck, (req, res) => {
   req.session.user = null;
   req.session.save(() => {
     res.redirect("/");
