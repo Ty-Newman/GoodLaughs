@@ -294,7 +294,6 @@ router.get(
 //       review.body = reviewBody;
 //       await review.save();
 //     } else {
-//       console.log(reviewBody, req.session.user.id, req.params.id);
 //       await db.Review.create({
 //         body: reviewBody,
 //         userId: req.session.user.id,
