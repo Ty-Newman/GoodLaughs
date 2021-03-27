@@ -50,11 +50,11 @@ app.use(checkUser);
 store.sync();
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/laughs", laughsRouter);
 app.use("/laughboxes", laughboxesRouter);
+app.use("/laughs", laughsRouter);
 app.use("/ratings", ratingsRouter);
 app.use("/reviews", reviewsRouter);
+app.use("/users", usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
