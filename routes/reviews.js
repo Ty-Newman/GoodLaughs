@@ -1,14 +1,14 @@
-const express = require("express");
-const router = express.Router();
-const db = require("../db/models");
-const { Sequelize } = require("../db/models");
 const {
-  csrfProtection,
   asyncHandler,
+  csrfProtection,
   handleValidationErrors,
   loginUserCheck,
 } = require("../utils");
 const { check, validationResult } = require("express-validator");
+const db = require("../db/models");
+const express = require("express");
+const router = express.Router();
+const { Sequelize } = require("../db/models");
 
 const validateReview = [
   check("reviewBody")

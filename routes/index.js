@@ -1,4 +1,4 @@
-const { csrfProtection, asyncHandler, loginUserCheck } = require("../utils");
+const { asyncHandler, csrfProtection, loginUserCheck } = require("../utils");
 const db = require("../db/models");
 const express = require("express");
 const router = express.Router();

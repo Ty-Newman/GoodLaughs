@@ -1,18 +1,18 @@
+const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 const express = require("express");
-const path = require("path");
-const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const { sequelize } = require("./db/models");
-const session = require("express-session");
-const { sessionSecret } = require("./config");
-const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
 const laughsRouter = require("./routes/laughs");
 const laughboxesRouter = require("./routes/laughboxes");
+const path = require("path");
 const ratingsRouter = require("./routes/ratings");
 const reviewsRouter = require("./routes/reviews");
+const session = require("express-session");
+const { sessionSecret } = require("./config");
+const { sequelize } = require("./db/models");
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
+const usersRouter = require("./routes/users");
 
 const app = express();
 
