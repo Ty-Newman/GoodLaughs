@@ -31,3 +31,18 @@ for (let i = 0; i < laughboxes.length; i++) {
     }
   });
 }
+
+const rates = document.getElementsByClassName("rate");
+for (let i = 0; i < rates.length; i++) {
+  rates[i].addEventListener("click", (event) => {
+    const rateCSSId = event.target.id;
+
+    const rateIdArray = rateCSSId.split("-");
+    const laughId = rateIdArray[0];
+    const starRating = rateIdArray[2];
+
+    if (rateCSSId !== undefined) {
+      location.href = "ratings/" + laughId + "/" + starRating;
+    }
+  });
+}
